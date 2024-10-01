@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
 import { fetchWeather } from "../thunks/fetchWeather";
@@ -11,13 +11,24 @@ const WeatherDisplay = () => {
   const loading = useSelector((state: RootState) => state.weather.loading);
   const error = useSelector((state: RootState) => state.weather.error);
 
-  // Fetch weather based on latitude and longitude, or city name
-  useEffect(() => {
-    dispatch(fetchWeather(44.34, 10.99, ""));
-  }, [dispatch]);
+  const [city, setCity] = useState("");
+
+  const handleSearch = () => {
+    if (city) {
+      dispatch(fetchWeather(0, 0, city));
+    }
+  };
 
   return (
     <div>
+      <input
+        type="text"
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
+        placeholder="Enter city name"
+      />
+      <button onClick={handleSearch}>Search</button>
+
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
       {weatherData && (
