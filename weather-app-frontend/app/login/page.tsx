@@ -22,11 +22,6 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const eyeIconProps = {
-    className: "absolute z-10 right-3 top-8 cursor-pointer",
-    alt: "Show or hide password",
-  };
-
   const handleLogin = async (email: string, password: string) => {
     const result = await signIn("credentials", {
       email,
@@ -37,12 +32,12 @@ export default function LoginForm() {
     if (result?.error) {
       toast.error("Invalid Credentials!");
     } else {
-      router.replace("/dashboard");
+      router.replace("/");
     }
   };
 
   const handleGoogleSignIn = async () => {
-    const result = await signIn("google", { callbackUrl: "/dashboard" });
+    const result = await signIn("google", { callbackUrl: "/" });
     if (result?.error) {
       toast.error("Google sign-in failed!");
     }
@@ -54,18 +49,20 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="flex justify-center items-center h-80%">
-      <Card
-        id="login-form"
-        className="shadow-lg w-full max-w-md p-11 rounded-3xl bg-[hsla(var(--card-glassy))] mx-4"
-      >
+    <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-gray-900">
+      <Card className="w-full max-w-md p-6 shadow-md rounded-lg bg-white dark:bg-gray-800">
         <CardHeader className="text-center mb-4">
-          <CardTitle className="text-xl">Login to Taitovarasto</CardTitle>
+          <CardTitle className="text-xl text-gray-800 dark:text-gray-100">
+            Login to Weather App
+          </CardTitle>
         </CardHeader>
         <CardContent className="w-full">
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="email" className="block mb-1 text-sm">
+              <label
+                htmlFor="email"
+                className="block mb-1 text-sm text-gray-600 dark:text-gray-300"
+              >
                 Email
               </label>
               <Input
@@ -81,7 +78,10 @@ export default function LoginForm() {
             </div>
 
             <div className="relative mb-4">
-              <label htmlFor="password" className="block mb-1 text-sm">
+              <label
+                htmlFor="password"
+                className="block mb-1 text-sm text-gray-600 dark:text-gray-300"
+              >
                 Password
               </label>
               <Input
@@ -95,10 +95,13 @@ export default function LoginForm() {
                 className="w-full"
               />
               {!showPassword ? (
-                <Eye {...eyeIconProps} onClick={() => setShowPassword(true)} />
+                <Eye
+                  className="absolute right-3 top-8 cursor-pointer"
+                  onClick={() => setShowPassword(true)}
+                />
               ) : (
                 <EyeOff
-                  {...eyeIconProps}
+                  className="absolute right-3 top-8 cursor-pointer"
                   onClick={() => setShowPassword(false)}
                 />
               )}
@@ -106,16 +109,14 @@ export default function LoginForm() {
 
             <div className="flex flex-col gap-4">
               <Button
-                variant={"default"}
-                className="rounded-3xl bg-blue-500 hover:bg-blue-600"
+                className="rounded-3xl bg-blue-500 hover:bg-blue-600 text-white"
                 type="submit"
               >
                 Sign In
               </Button>
 
               <Button
-                variant={"outline"}
-                className="rounded-3xl flex items-center justify-center bg-white text-black"
+                className="rounded-3xl flex items-center justify-center bg-white dark:bg-gray-700 text-black dark:text-white"
                 onClick={handleGoogleSignIn}
               >
                 <AiFillGoogleCircle className="mr-2 text-xl" />

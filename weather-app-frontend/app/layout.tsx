@@ -1,13 +1,16 @@
-import React, { ReactNode } from "react";
+import "./globals.css";
 import ClientProviders from "./ClientProviders";
-import "./global.css";
 
 export const metadata = {
   title: "Weather App",
   description: "A weather app with theme toggling and Redux",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>
