@@ -47,13 +47,13 @@ const Navigation: React.FC<NavigationProps> = ({
 
   return (
     <>
-      <NavigationMenu className="mx-10">
+      <NavigationMenu className="mx-10 ">
         <NavigationMenuList className="flex items-center justify-between w-full">
           <NavigationMenuItem>
             <Link href="/" legacyBehavior passHref>
               <NavigationMenuLink>
                 <div className="top-1 relative">
-                  <CardTitle className="text-3xl cursor-pointer">
+                  <CardTitle className="text-3xl cursor-pointer text-darkText dark:text-lightText ">
                     LaWeather
                   </CardTitle>
                 </div>
@@ -70,7 +70,7 @@ const Navigation: React.FC<NavigationProps> = ({
                 <Input
                   type="text"
                   placeholder="Search for city..."
-                  className="pl-10"
+                  className="pl-10  text-darkText dark:text-lightText"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   onKeyDown={handleKeyDown}

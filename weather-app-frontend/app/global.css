@@ -4,6 +4,14 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  @apply bg-background text-foreground;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+    transition: background-color 0.3s, color 0.3s;
+  }
 }
 
 @layer utilities {

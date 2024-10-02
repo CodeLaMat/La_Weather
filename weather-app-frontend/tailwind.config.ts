@@ -50,6 +50,18 @@ const config: Config = {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        lightBody: "#f4f7fc",
+        darkBody: "#2c2c2c",
+        lightSidebar: "#fff",
+        darkSidebar: "#333",
+        lightCard: "#fff",
+        darkCard: "#444",
+        lightToggleBorder: "#FFF",
+        darkToggleBorder: "#6B8096",
+        lightBackground: "#363537",
+        darkBackground: "#999",
+        lightText: "#fff",
+        darkText: "#444",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -58,6 +70,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 };
 export default config;

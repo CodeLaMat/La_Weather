@@ -1,9 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { ThemeProvider } from "styled-components";
-import GlobalStyle from "@/styles/globals";
-import { lightTheme, darkTheme } from "@/styles/themes";
+import React, { useState, useEffect } from "react";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
 import Navigation from "@/components/Navigation";
@@ -13,28 +10,30 @@ export default function ClientProviders({
 }: {
   children: React.ReactNode;
 }) {
-  const [theme, setTheme] = useState(lightTheme);
+  const [isDarkTheme, setIsDarkTheme] = useState(true);
+
+  // Apply the dark mode class to the HTML element
+  useEffect(() => {
+    if (isDarkTheme) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDarkTheme]);
 
   const toggleTheme = () => {
-    setTheme(theme === lightTheme ? darkTheme : lightTheme);
+    setIsDarkTheme(!isDarkTheme);
   };
 
   return (
     <Provider store={store}>
-      {" "}
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <div
-          id="app-top-navigation"
-          className="flex flex-row justify-between p-4"
-        >
-          <Navigation
-            toggleTheme={toggleTheme}
-            isDarkTheme={theme === darkTheme}
-          />
-        </div>
-        {children}
-      </ThemeProvider>
+      <div
+        id="app-top-navigation"
+        className="flex flex-row justify-between p-4  bg-lightBody dark:bg-darkBody"
+      >
+        <Navigation toggleTheme={toggleTheme} isDarkTheme={isDarkTheme} />
+      </div>
+      {children}
     </Provider>
   );
 }
