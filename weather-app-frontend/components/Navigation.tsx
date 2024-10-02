@@ -88,7 +88,7 @@ const Navigation: React.FC<NavigationProps> = ({
           <NavigationMenuList className="flex items-center align-middle justify-between w-full">
             <NavigationMenuItem>
               <button onClick={toggleTheme} className="ml-4">
-                {isDarkTheme ? (
+                {!isDarkTheme ? (
                   <Moon className="h-8 w-8 text-gray-500 hover:text-gray-800" />
                 ) : (
                   <Sun className="h-8 w-8 text-yellow-500 hover:text-gray-800" />

@@ -29,7 +29,7 @@ export default function ClientProviders({
     <Provider store={store}>
       <div
         id="app-top-navigation"
-        className="flex flex-row justify-between p-4  bg-lightBody dark:bg-darkBody"
+        className="flex flex-row justify-between p-4  bg-darkBackground dark:bg-darkBody"
       >
         <Navigation toggleTheme={toggleTheme} isDarkTheme={isDarkTheme} />
       </div>
