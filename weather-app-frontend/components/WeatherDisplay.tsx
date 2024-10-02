@@ -4,8 +4,6 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { FiMapPin } from "react-icons/fi";
-import { BsCloudRain, BsSun } from "react-icons/bs";
-import { AiOutlineCloud } from "react-icons/ai";
 
 // Function to convert Kelvin to Celsius
 const kelvinToCelsius = (kelvin: number) => (kelvin - 273.15).toFixed(1);
@@ -39,9 +37,13 @@ const WeatherDisplay = () => {
     32
   ).toFixed(1);
 
+  const iconCode = weather.weather[0].icon; // e.g., "10d"
+  const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
   return (
-    <div className="  text-white rounded-3xl  p-2 flex justify-around ">
-      <div className="flex flex-col gap-3">
+    <div className="p-6 flex flex-col sm:flex-row justify-between items-center w-full max-w-4xl mx-auto">
+      {/* Left Section (Location and Date) */}
+      <div className="flex flex-col gap-3 items-center sm:items-start mb-4 sm:mb-0">
         <div className="flex items-center gap-2">
           <FiMapPin className="text-xl" />
           <span className="bg-gray-700 rounded-full px-3 py-1">
@@ -49,25 +51,26 @@ const WeatherDisplay = () => {
           </span>
         </div>
         <div>
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-2xl sm:text-4xl text-darkText dark:text-lightText font-light-bold">
             {date.toLocaleString("en-US", { weekday: "long" })}
           </h1>
           <p className="text-gray-400">{date.toLocaleDateString()}</p>
         </div>
       </div>
-      <div className="flex items-center justify-center">
-        {weatherMain === "Rain" ? (
-          <BsCloudRain className="text-6xl text-blue-400" />
-        ) : weatherMain === "Clouds" ? (
-          <AiOutlineCloud className="text-6xl text-gray-400" />
-        ) : (
-          <BsSun className="text-6xl text-yellow-400" />
-        )}
+
+      {/* Middle Section (Weather Icon) */}
+      <div className="flex items-center justify-center flex-col  text-darkText dark:text-lightText translate-y-10">
+        <img src={iconUrl} alt="Weather icon" className="w-24 h-24" />
+        <p className="mt-2 text-lg capitalize">{weatherMain}</p>
       </div>
-      <div className="flex flex-col items-end">
+
+      {/* Right Section (Temperature and Condition) */}
+      <div className="flex flex-col items-center sm:items-end">
         <div className="flex items-center gap-2">
-          <span className="text-4xl font-bold">
-            {isCelsius ? `${temperatureCelsius}` : `${temperatureFahrenheit}`}
+          <span className="text-2xl sm:text-4xl font-bold  text-darkText dark:text-lightText">
+            {isCelsius
+              ? `${temperatureCelsius}°C`
+              : `${temperatureFahrenheit}°F`}
           </span>
           <button
             onClick={toggleTemperature}
@@ -83,7 +86,9 @@ const WeatherDisplay = () => {
             : `${((Number(feelsLikeCelsius) * 9) / 5 + 32).toFixed(1)}°F`}
         </span>
         <div>
-          <p className="mt-2 font-semibold capitalize">{weatherDescription}</p>
+          <p className="mt-2 font-semibold capitalize  text-darkText dark:text-secondary">
+            {weatherDescription}
+          </p>
           <p className="text-gray-400 text-sm">Wind: {windSpeed} m/s</p>
         </div>
       </div>
