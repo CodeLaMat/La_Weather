@@ -1,6 +1,6 @@
 // thunks/fetchWeather.ts
 import axios from "axios";
-import { AppDispatch } from "../store/store";
+import { AppDispatch } from "../../store/store";
 import {
   fetchWeatherStart,
   fetchWeatherSuccess,
@@ -24,7 +24,11 @@ export const fetchWeather =
       const response = await axios.get(url);
 
       dispatch(fetchWeatherSuccess(response.data));
-    } catch (error) {
-      dispatch(fetchWeatherFailure(error.message));
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        dispatch(fetchWeatherFailure(error.message));
+      } else {
+        dispatch(fetchWeatherFailure("An unexpected error occurred"));
+      }
     }
   };

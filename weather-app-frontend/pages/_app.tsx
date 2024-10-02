@@ -4,7 +4,7 @@ import { ThemeProvider } from "styled-components";
 import GlobalStyle from "../styles/globals";
 import { lightTheme, darkTheme } from "../styles/themes";
 import { useState } from "react";
-import { store } from "../store/store";
+import { store } from "../../store/store";
 import { Provider } from "react-redux";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
