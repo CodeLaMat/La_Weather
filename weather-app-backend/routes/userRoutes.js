@@ -1,7 +1,9 @@
-import express from "express";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
-import User from "../models/User";
+const express = require("express");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const User = require("../models/User");
+const { jwtSecret } = require("../config/config");
+
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
@@ -29,7 +31,7 @@ router.post("/login", async (req, res) => {
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id }, jwtSecret, {
       expiresIn: "1h",
     });
     res.status(200).json({ token });

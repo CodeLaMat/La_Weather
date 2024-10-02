@@ -1,13 +1,17 @@
-import React from "react";
-import { AppProps } from "next/app";
+"use client";
+
+import React, { useState } from "react";
 import { ThemeProvider } from "styled-components";
 import GlobalStyle from "../styles/globals";
 import { lightTheme, darkTheme } from "../styles/themes";
-import { useState } from "react";
-import { store } from "../../store/store";
 import { Provider } from "react-redux";
+import { store } from "../store/store";
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export default function ClientProviders({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [theme, setTheme] = useState(lightTheme);
 
   const toggleTheme = () => {
@@ -24,7 +28,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         >
           Toggle Theme
         </button>
-        <Component {...pageProps} />
+        {children}
       </ThemeProvider>
     </Provider>
   );
