@@ -1,6 +1,6 @@
-import React from "react";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import ClientProviders from "./ClientProviders";
+import "./global.css";
 
 export const metadata = {
   title: "Weather App",

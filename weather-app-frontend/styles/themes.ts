@@ -1,9 +1,11 @@
 export const lightTheme = {
-  body: "#FFFFFF",
-  text: "#000000",
+  body: "#f4f7fc",
+  sidebarBg: "#fff",
+  cardBg: "#fff",
 };
 
 export const darkTheme = {
-  body: "#1D1D1D",
-  text: "#FFFFFF",
+  body: "#2c2c2c",
+  sidebarBg: "#333",
+  cardBg: "#444",
 };

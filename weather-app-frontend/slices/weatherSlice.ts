@@ -1,16 +1,15 @@
-// slices/weatherSlice.ts
+import { WeatherData } from "@/types/mainTypes";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { WeatherData } from "../types/mainTypes";
 
 interface WeatherState {
-  weatherData: WeatherData | null;
   loading: boolean;
+  weatherData: WeatherData | null;
   error: string | null;
 }
 
 const initialState: WeatherState = {
-  weatherData: null,
   loading: false,
+  weatherData: null,
   error: null,
 };
 
@@ -23,12 +22,10 @@ const weatherSlice = createSlice({
       state.error = null;
     },
     fetchWeatherSuccess(state, action: PayloadAction<WeatherData>) {
-      state.weatherData = action.payload;
       state.loading = false;
-      state.error = null;
+      state.weatherData = action.payload;
     },
     fetchWeatherFailure(state, action: PayloadAction<string>) {
-      state.weatherData = null;
       state.loading = false;
       state.error = action.payload;
     },

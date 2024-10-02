@@ -13,8 +13,9 @@ const HomePageContainer = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   padding: 20px;
-  height: 100vh; /* Full-height layout */
-  background-color: #f4f7fc; /* Light background */
+  height: 100vh;
+  background-color: ${(props) =>
+    props.theme.body}; /* Use theme-based background */
 `;
 
 const MainSection = styled.div`
@@ -22,22 +23,22 @@ const MainSection = styled.div`
   flex-direction: column;
   flex: 3;
   margin-right: 20px;
-  gap: 20px; /* Space between components */
+  gap: 20px;
 `;
 
 const SidebarSection = styled.div`
   flex: 1;
   width: 250px;
-  background-color: #fff;
+  background-color: ${(props) => props.theme.sidebarBg};
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow */
-  height: calc(100vh - 40px); /* Full height minus padding */
-  overflow-y: auto; /* Scrollable sidebar */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  height: calc(100vh - 40px);
+  overflow-y: auto;
 `;
 
 const SectionCard = styled.div`
-  background-color: #fff;
+  background-color: ${(props) => props.theme.cardBg};
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -47,8 +48,8 @@ const SectionCard = styled.div`
 `;
 
 const FullWidthSection = styled(SectionCard)`
-  height: 400px; /* Taller section for the map */
-  width: calc(100% - 40px); /* Full width with margin */
+  height: 400px;
+  width: calc(100% - 40px);
 `;
 
 const Home = () => {

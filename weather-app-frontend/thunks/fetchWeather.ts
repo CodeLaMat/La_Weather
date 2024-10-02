@@ -1,6 +1,5 @@
-// thunks/fetchWeather.ts
 import axios from "axios";
-import { AppDispatch } from "../../store/store";
+import { AppDispatch } from "../store/store";
 import {
   fetchWeatherStart,
   fetchWeatherSuccess,
