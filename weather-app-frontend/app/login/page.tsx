@@ -53,7 +53,7 @@ export default function LoginForm() {
       <Card className="w-full max-w-md p-6 shadow-md rounded-lg bg-white dark:bg-gray-800">
         <CardHeader className="text-center mb-4">
           <CardTitle className="text-xl text-gray-800 dark:text-gray-100">
-            Login to Weather App
+            Login to LaWeather
           </CardTitle>
         </CardHeader>
         <CardContent className="w-full">

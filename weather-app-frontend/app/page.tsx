@@ -2,10 +2,11 @@
 
 import React from "react";
 import WeatherDisplay from "../components/WeatherDisplay";
-import Forecast from "../components/Forecast";
+import Highlight from "../components/Highlight";
 import RainChart from "../components/RainChart";
 import GlobalMap from "../components/GlobalMap";
 import Sidebar from "../components/Sidebar";
+import FiveDays from "@/components/FiveDays";
 
 const Home = () => {
   return (
@@ -24,14 +25,17 @@ const Home = () => {
 
         {/* Forecast */}
         <div className="rounded-lg p-5 shadow-lg h-86 bg-lightCard dark:bg-darkCard">
-          <Forecast />
+          <Highlight />
         </div>
 
         {/* Rain Chart */}
         <div className="rounded-lg p-5 shadow-lg h-72 bg-lightCard dark:bg-darkCard">
           <RainChart />
         </div>
-
+        {/* Five days forecast */}
+        <div className="rounded-lg p-5 shadow-lg h-72 bg-lightCard dark:bg-darkCard">
+          <FiveDays />
+        </div>
         {/* Global Map (spans full width on large screens) */}
         <div className="rounded-lg p-5 shadow-lg h-96 col-span-1 lg:col-span-2 bg-lightCard dark:bg-darkCard">
           <GlobalMap />

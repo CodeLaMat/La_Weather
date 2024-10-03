@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { FiMapPin } from "react-icons/fi";
 
-// Helper function to convert Kelvin to Celsius
 const kelvinToCelsius = (kelvin: number) => (kelvin - 273.15).toFixed(1);
 
 const WeatherDisplay = () => {
@@ -21,9 +20,16 @@ const WeatherDisplay = () => {
     setIsCelsius(!isCelsius);
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (!weatherData) return <p>No weather data available</p>;
+  if (loading)
+    return <p className=" text-darkText dark:text-lightText">Loading...</p>;
+  if (error)
+    return <p className=" text-darkText dark:text-lightText">Error: {error}</p>;
+  if (!weatherData)
+    return (
+      <p className=" text-darkText dark:text-lightText">
+        Location not selected
+      </p>
+    );
 
   const weather = weatherData.list[0];
   const temperatureCelsius = kelvinToCelsius(weather.main.temp);
@@ -58,7 +64,6 @@ const WeatherDisplay = () => {
 
       {/* Main Weather Details */}
       <div className="flex justify-between items-center">
-        {/* Left section (Day and Date) */}
         <div>
           <h1 className="text-3xl 2xl:text-4xl font-semibold text-darkText dark:text-lightText">
             {date.toLocaleString("en-US", { weekday: "long" })}
