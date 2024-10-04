@@ -1,5 +1,6 @@
 import "./globals.css";
 import ClientProviders from "./ClientProviders";
+import { Toaster } from "sonner";
 
 export const metadata = {
   title: "Weather App",
@@ -14,6 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Toaster position="top-right" />
         <ClientProviders>{children}</ClientProviders>
       </body>
     </html>

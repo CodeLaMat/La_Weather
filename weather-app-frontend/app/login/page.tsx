@@ -9,20 +9,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { AiFillGoogleCircle } from "react-icons/ai";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loadings, setLoading] = useState(false);
+
   const router = useRouter();
 
   const handleLogin = async (email: string, password: string) => {
+    setLoading(true);
+
     const result = await signIn("credentials", {
       email,
       password,
@@ -32,8 +36,14 @@ export default function LoginForm() {
     if (result?.error) {
       toast.error("Invalid Credentials!");
     } else {
+      setLoading(false);
       router.replace("/");
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleLogin(email, password);
   };
 
   const handleGoogleSignIn = async () => {
@@ -41,11 +51,6 @@ export default function LoginForm() {
     if (result?.error) {
       toast.error("Google sign-in failed!");
     }
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    handleLogin(email, password);
   };
 
   return (

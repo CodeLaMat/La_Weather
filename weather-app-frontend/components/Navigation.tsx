@@ -103,7 +103,10 @@ const Navigation: React.FC<NavigationProps> = ({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>
-                  <Link href="/login">Login/Logout</Link>
+                  <Link href="/login">Login</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/signup">Sign Up</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Link href="/favorites">Favorite Locations</Link>
