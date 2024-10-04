@@ -9,6 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { startLoading, stopLoading } from "@/slices/loadingSlice";
 import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
@@ -16,17 +18,19 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { AiFillGoogleCircle } from "react-icons/ai";
 import { Eye, EyeOff } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const isLoading = useAppSelector((state) => state.loading.isLoggingIn);
+  const dispatch = useAppDispatch();
 
   const router = useRouter();
 
   const handleLogin = async (email: string, password: string) => {
-    setIsLoading(true);
+    dispatch(startLoading("isLoggingIn"));
 
     const result = await signIn("credentials", {
       email,
@@ -37,7 +41,7 @@ export default function LoginForm() {
     if (result?.error) {
       toast.error("Invalid Credentials!");
     } else {
-      setIsLoading(false);
+      dispatch(stopLoading("isLoggingIn"));
       router.replace("/");
     }
   };
@@ -57,16 +61,16 @@ export default function LoginForm() {
   return isLoading ? (
     <Loading />
   ) : (
-    <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-gray-900">
-      <Card className="w-full max-w-md p-6 shadow-md rounded-lg bg-white dark:bg-gray-800">
+    <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-black">
+      <Card className="w-full max-w-md p-6 shadow-md rounded-lgbg-darkBackground dark:bg-lightBackground">
         <CardHeader className="text-center mb-4">
-          <CardTitle className="text-xl text-gray-800 dark:text-gray-100">
+          <CardTitle className="text-xl text-darkText dark:text-lightText">
             Login to LaWeather
           </CardTitle>
         </CardHeader>
         <CardContent className="w-full">
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
+            <div className="mb-4 text-darkText dark:text-lightText">
               <label
                 htmlFor="email"
                 className="block mb-1 text-sm text-gray-600 dark:text-gray-300"
@@ -82,10 +86,11 @@ export default function LoginForm() {
                 name="email"
                 autoComplete="email"
                 className="w-full"
+                placeholder="you@example.com"
               />
             </div>
 
-            <div className="relative mb-4">
+            <div className="relative mb-4 text-darkText dark:text-lightText">
               <label
                 htmlFor="password"
                 className="block mb-1 text-sm text-gray-600 dark:text-gray-300"
@@ -101,6 +106,7 @@ export default function LoginForm() {
                 name="password"
                 autoComplete="current-password"
                 className="w-full"
+                placeholder="*********"
               />
               {!showPassword ? (
                 <Eye
@@ -124,11 +130,11 @@ export default function LoginForm() {
               </Button>
 
               <Button
-                className="rounded-3xl flex items-center justify-center bg-white dark:bg-gray-700 text-black dark:text-white"
+                className="rounded-3xl flex items-center justify-center bg-red-500 hover:bg-red-600 text-lightText "
                 onClick={handleGoogleSignIn}
               >
-                <AiFillGoogleCircle className="mr-2 text-xl" />
-                Sign in with Google
+                <FcGoogle className="mr-2 h-5 w-5" />
+                {isLoading ? "Processing..." : "Sign Up with Google"}
               </Button>
             </div>
           </form>
