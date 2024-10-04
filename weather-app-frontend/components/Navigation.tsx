@@ -22,7 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 interface NavigationProps {
   toggleTheme: () => void;
@@ -35,7 +35,7 @@ const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const [city, setCity] = useState("");
   const dispatch = useDispatch<AppDispatch>();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const isAuthenticated = status === "authenticated";
 
   const router = useRouter();
