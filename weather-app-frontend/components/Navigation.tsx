@@ -56,6 +56,7 @@ const Navigation: React.FC<NavigationProps> = ({
 
   const handleLogout = () => {
     dispatch(logoutThunk());
+    setCity("");
   };
 
   return (

@@ -1,5 +1,6 @@
 import { WeatherData } from "@/types/mainTypes";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { logoutUser } from "@/thunks/auth";
 
 interface WeatherState {
   loading: boolean;
@@ -29,6 +30,19 @@ const weatherSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(logoutUser.fulfilled, (state) => {
+      state.weatherData = null;
+      state.loading = false;
+      state.error = null;
+    });
+
+    builder.addCase(logoutUser.rejected, (state) => {
+      state.weatherData = null;
+      state.loading = false;
+      state.error = null;
+    });
   },
 });
 
