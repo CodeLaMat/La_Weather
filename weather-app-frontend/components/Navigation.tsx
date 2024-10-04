@@ -12,7 +12,7 @@ import { Moon, Search, Sun, UserCircle, LogOut, LogIn } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { fetchWeather } from "../thunks/fetchWeather";
 import { logoutThunk } from "../thunks/logoutThunk";
-
+import { useRouter } from "next/navigation";
 import { AppDispatch } from "../store/store";
 import Link from "next/link";
 import { CardTitle } from "./ui/card";
@@ -38,15 +38,19 @@ const Navigation: React.FC<NavigationProps> = ({
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
 
+  const router = useRouter();
+
   const handleSearch = () => {
     if (city) {
       dispatch(fetchWeather(0, 0, city));
+      router.push("/");
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSearch();
+      router.push("/");
     }
   };
 
