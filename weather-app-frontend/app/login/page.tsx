@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
@@ -20,12 +21,12 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loadings, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
   const handleLogin = async (email: string, password: string) => {
-    setLoading(true);
+    setIsLoading(true);
 
     const result = await signIn("credentials", {
       email,
@@ -36,7 +37,7 @@ export default function LoginForm() {
     if (result?.error) {
       toast.error("Invalid Credentials!");
     } else {
-      setLoading(false);
+      setIsLoading(false);
       router.replace("/");
     }
   };
@@ -53,7 +54,9 @@ export default function LoginForm() {
     }
   };
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-gray-900">
       <Card className="w-full max-w-md p-6 shadow-md rounded-lg bg-white dark:bg-gray-800">
         <CardHeader className="text-center mb-4">
