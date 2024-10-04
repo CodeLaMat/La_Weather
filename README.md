@@ -1,8 +1,8 @@
-# Weather App
+# LaWeather App
 
 ![Weather App Banner](./assets/banner.gif)
 
-Welcome to the **Weather App**, a full-stack application that provides real-time weather information based on your location. Whether you're planning your day, traveling, or just curious about the weather, our app delivers accurate and timely weather data right at your fingertips.
+Welcome to the **LaWeather App**, a full-stack application that provides real-time weather information based on your location. Whether you're planning your day, traveling, or just curious about the weather, our app delivers accurate and timely weather data right at your fingertips.
 
 ![App Preview](./assets/app-preview.gif)
 
