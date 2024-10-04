@@ -1,5 +1,7 @@
 import axios from "axios";
 import { AppDispatch } from "../store/store";
+import { startLoading, stopLoading } from "../slices/loadingSlice";
+
 import {
   fetchWeatherStart,
   fetchWeatherSuccess,
@@ -9,6 +11,8 @@ import {
 export const fetchWeather =
   (lat: number = 0, lon: number = 0, city?: string) =>
   async (dispatch: AppDispatch) => {
+    dispatch(startLoading("isFetchingWeather"));
+
     try {
       dispatch(fetchWeatherStart());
 
@@ -23,6 +27,7 @@ export const fetchWeather =
       const response = await axios.get(url);
 
       dispatch(fetchWeatherSuccess(response.data));
+      dispatch(stopLoading("isFetchingWeather"));
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         dispatch(fetchWeatherFailure(error.message));

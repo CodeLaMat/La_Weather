@@ -71,3 +71,9 @@ export interface Coordinates {
   lat: number;
   lon: number;
 }
+
+export interface LoadingState {
+  isLoggingIn: boolean;
+  isLoggingOut: boolean;
+  isFetchingWeather: boolean;
+}

@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { SessionProvider } from "next-auth/react";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
 import Navigation from "@/components/Navigation";
+import GlobalLoading from "@/components/GlobalLoading";
 
 export default function ClientProviders({
   children,
@@ -12,7 +14,6 @@ export default function ClientProviders({
 }) {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
 
-  // Apply the dark mode class to the HTML element
   useEffect(() => {
     if (isDarkTheme) {
       document.documentElement.classList.add("dark");
@@ -26,14 +27,17 @@ export default function ClientProviders({
   };
 
   return (
-    <Provider store={store}>
-      <div
-        id="app-top-navigation"
-        className="flex flex-row justify-between p-4  bg-darkBackground dark:bg-darkBody"
-      >
-        <Navigation toggleTheme={toggleTheme} isDarkTheme={isDarkTheme} />
-      </div>
-      {children}
-    </Provider>
+    <SessionProvider>
+      <Provider store={store}>
+        <div
+          id="app-top-navigation"
+          className="flex flex-row justify-between p-4  bg-darkBackground dark:bg-darkBody"
+        >
+          <Navigation toggleTheme={toggleTheme} isDarkTheme={isDarkTheme} />
+        </div>
+        <GlobalLoading />
+        {children}
+      </Provider>
+    </SessionProvider>
   );
 }

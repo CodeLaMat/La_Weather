@@ -8,9 +8,11 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Input } from "@/components/ui/input";
-import { Moon, Search, Sun, UserCircle } from "lucide-react";
+import { Moon, Search, Sun, UserCircle, LogOut, LogIn } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { fetchWeather } from "../thunks/fetchWeather";
+import { logoutThunk } from "../thunks/logoutThunk";
+
 import { AppDispatch } from "../store/store";
 import Link from "next/link";
 import { CardTitle } from "./ui/card";
@@ -20,6 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { useSession, signOut } from "next-auth/react";
 
 interface NavigationProps {
   toggleTheme: () => void;
@@ -32,6 +35,8 @@ const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const [city, setCity] = useState("");
   const dispatch = useDispatch<AppDispatch>();
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === "authenticated";
 
   const handleSearch = () => {
     if (city) {
@@ -43,6 +48,10 @@ const Navigation: React.FC<NavigationProps> = ({
     if (e.key === "Enter") {
       handleSearch();
     }
+  };
+
+  const handleLogout = () => {
+    dispatch(logoutThunk());
   };
 
   return (
@@ -102,18 +111,29 @@ const Navigation: React.FC<NavigationProps> = ({
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Link href="/login">Login</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/signup">Sign Up</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/favorites">Favorite Locations</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/history">Search History</Link>
-                </DropdownMenuItem>
+                {isAuthenticated ? (
+                  <>
+                    <DropdownMenuItem onClick={handleLogout}>
+                      <LogOut className="mr-2 h-4 w-4" /> Logout
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link href="/favorites">Favorite Locations</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link href="/history">Search History</Link>
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem>
+                      <LogIn className="mr-2 h-4 w-4" />{" "}
+                      <Link href="/login">Login</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link href="/signup">Sign Up</Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </NavigationMenuList>
