@@ -5,6 +5,8 @@ const initialState: LoadingState = {
   isLoggingIn: false,
   isLoggingOut: false,
   isFetchingWeather: false,
+  isRequestingPasswordReset: false,
+  isResettingPassword: false,
 };
 
 const loadingSlice = createSlice({

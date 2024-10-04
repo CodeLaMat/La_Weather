@@ -76,4 +76,6 @@ export interface LoadingState {
   isLoggingIn: boolean;
   isLoggingOut: boolean;
   isFetchingWeather: boolean;
+  isRequestingPasswordReset: boolean;
+  isResettingPassword: boolean;
 }
