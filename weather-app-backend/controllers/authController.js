@@ -3,10 +3,14 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const User = require("../models/User");
 const { jwtSecret } = require("../config/config");
-const transporter = require("../config/transporter"); 
+const transporter = require("../config/transporter");
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
+  const { name, surname, email, password } = req.body;
+
+  if (!name || !surname || !email || !password) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
 
   try {
     const userExists = await User.findOne({ email });
@@ -14,15 +18,34 @@ const register = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    console.log("Hashed Password (Register):", hashedPassword);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = new User({ email, hashPassword: hashedPassword });
-    await user.save();
+    const newUser = new User({
+      name: `${name} ${surname}`,
+      email,
+      hashPassword: hashedPassword,
+    });
+    await newUser.save();
+
+    const mailOptions = {
+      from: process.env.EMAIL_FROM,
+      to: email,
+      subject: "You have successfully registered",
+      html: `
+      <p>Dear ${name} ,</p>
+       <p>You have been registered in LaWeather platform. </p>
+        <p>Thank you for registering with us. </p>
+        <p>Best regards, </p>
+        <p>LaWeather Team</p>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
+    console.error("Registration error:", error);
     res.status(500).json({ message: "Error registering user" });
   }
 };
@@ -48,7 +71,12 @@ const login = async (req, res) => {
     const token = jwt.sign({ userId: user._id }, jwtSecret, {
       expiresIn: "1h",
     });
-    res.status(200).json({ token, userId: user._id, email: user.email });
+    res.status(200).json({
+      token,
+      userId: user._id,
+      email: user.email,
+      name: user.name,
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Error logging in" });

@@ -1,36 +1,46 @@
 import { backendApiRoutes } from "@/lib/apiRoutes";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { startLoading, stopLoading } from "@/slices/loadingSlice";
+import { LoginUserArgs, LoginUserResponse } from "@/types/mainTypes";
 
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (
-    { email, password }: { email: string; password: string },
-    { rejectWithValue }
+    {
+      name,
+      surname,
+      email,
+      password,
+    }: { name: string; surname: string; email: string; password: string },
+    { rejectWithValue, dispatch }
   ) => {
+    dispatch(startLoading("isLoggingIn"));
     try {
       const response = await fetch(`${backendApiRoutes.REGISTER}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, name, surname }),
       });
 
       if (!response.ok) {
         const data = await response.json();
         console.log(data);
-
         throw new Error(data.message || "Registration failed");
       }
 
-      return await response.json();
-    } catch (error) {
+      const data = await response.json();
+      return data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       if (error instanceof Error) {
         return rejectWithValue(error.message);
       } else {
         return rejectWithValue("An unknown error occurred");
       }
+    } finally {
+      dispatch(stopLoading("isLoggingIn"));
     }
   }
 );
@@ -58,6 +68,7 @@ export const requestPasswordReset = createAsyncThunk(
       }
 
       return data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error instanceof Error) {
         return rejectWithValue(error.message);
@@ -93,6 +104,7 @@ export const resetPassword = createAsyncThunk(
       }
 
       return data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error instanceof Error) {
         return rejectWithValue(error.message);
@@ -105,38 +117,40 @@ export const resetPassword = createAsyncThunk(
   }
 );
 
-export const loginUser = createAsyncThunk(
-  "auth/login",
-  async (
-    { email, password }: { email: string; password: string },
-    { rejectWithValue }
-  ) => {
-    try {
-      const response = await fetch(`${backendApiRoutes.LOGIN}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+export const loginUser = createAsyncThunk<
+  LoginUserResponse,
+  LoginUserArgs,
+  { rejectValue: string }
+>("auth/login", async ({ email, password }, { rejectWithValue, dispatch }) => {
+  dispatch(startLoading("isLoggingIn"));
+  try {
+    const response = await fetch(`${backendApiRoutes.LOGIN}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-      if (!response.ok) {
-        const data = await response.json();
-        console.log(data);
-
-        throw new Error(data.message || "Login failed");
-      }
-
-      return await response.json();
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
-      } else {
-        return rejectWithValue("An unknown error occurred");
-      }
+    if (!response.ok) {
+      const data = await response.json();
+      console.log(data);
+      throw new Error(data.message || "Login failed");
     }
+
+    const data: LoginUserResponse = await response.json();
+    return data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error instanceof Error) {
+      return rejectWithValue(error.message);
+    } else {
+      return rejectWithValue("An unknown error occurred");
+    }
+  } finally {
+    dispatch(stopLoading("isLoggingIn"));
   }
-);
+});
 
 export const logoutUser = createAsyncThunk(
   "auth/logout",

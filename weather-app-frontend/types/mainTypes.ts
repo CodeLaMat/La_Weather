@@ -79,3 +79,36 @@ export interface LoadingState {
   isRequestingPasswordReset: boolean;
   isResettingPassword: boolean;
 }
+
+export interface RegisterUserArgs {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+}
+
+export interface RegisterUserResponse {
+  id: string;
+  name: string;
+  surname: string;
+  email: string;
+}
+
+export interface LoginUserArgs {
+  email: string;
+  password: string;
+}
+
+export interface LoginUserResponse {
+  token: string;
+  user: {
+    id: string;
+    name: string;
+    surname: string;
+    email: string;
+  };
+}
+
+export interface AuthError {
+  message: string;
+}

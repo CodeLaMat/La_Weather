@@ -15,7 +15,7 @@ const handler = NextAuth({
         email: {},
         password: {},
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (!credentials) {
           console.error("Missing credentials");
           return null;
@@ -49,6 +49,7 @@ const handler = NextAuth({
           if (res.ok && user) {
             return user;
           }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           throw new Error(error.message || "Login error");
         }

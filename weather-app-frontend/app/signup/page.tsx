@@ -15,6 +15,9 @@ import { Eye, EyeOff } from "lucide-react";
 export default function SignUpForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -26,7 +29,9 @@ export default function SignUpForm() {
 
     dispatch(startLoading("isLoggingIn"));
     try {
-      const resultAction = await dispatch(registerUser({ email, password }));
+      const resultAction = await dispatch(
+        registerUser({ name, surname, email, password })
+      );
       console.log(resultAction);
       if (registerUser.fulfilled.match(resultAction)) {
         toast.success("User registered successfully");
@@ -34,6 +39,7 @@ export default function SignUpForm() {
       } else {
         throw new Error(resultAction.payload as string);
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(`Error: ${error.message}`);
     } finally {
@@ -45,6 +51,7 @@ export default function SignUpForm() {
     dispatch(startLoading("isLoggingIn"));
     try {
       await signIn("google", { callbackUrl: "/dashboard" });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Google Sign-In failed:", error);
       toast.error(`Error: ${error.message}`);
@@ -62,6 +69,43 @@ export default function SignUpForm() {
         <h2 className="text-2xl font-semibold text-center mb-4text-darkText dark:text-lightText">
           Sign Up to LaWeather
         </h2>
+        {/* Name Field */}
+        <div className="mb-4 text-darkText dark:text-lightText">
+          <label
+            htmlFor="name"
+            className="block mb-1 text-sm text-darkText dark:text-lightText"
+          >
+            Name
+          </label>
+          <Input
+            required
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            type="text"
+            className="w-full"
+            placeholder="John"
+          />
+        </div>
+
+        {/* Surname Field */}
+        <div className="mb-4 text-darkText dark:text-lightText">
+          <label
+            htmlFor="surname"
+            className="block mb-1 text-sm text-darkText dark:text-lightText"
+          >
+            Surname
+          </label>
+          <Input
+            required
+            id="surname"
+            value={surname}
+            onChange={(e) => setSurname(e.target.value)}
+            type="text"
+            className="w-full"
+            placeholder="Doe"
+          />
+        </div>
         <div className="mb-4 text-darkText dark:text-lightText">
           <label
             htmlFor="email"
