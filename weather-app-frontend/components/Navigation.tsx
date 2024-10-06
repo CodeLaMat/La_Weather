@@ -8,7 +8,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Input } from "@/components/ui/input";
-import { Moon, Search, Sun, UserCircle, LogOut, LogIn } from "lucide-react";
+import { Moon, Search, Sun, LogOut, LogIn, UserCircle } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { fetchWeather } from "../thunks/fetchWeather";
 import { logoutThunk } from "../thunks/logoutThunk";
@@ -35,8 +35,11 @@ const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const [city, setCity] = useState("");
   const dispatch = useDispatch<AppDispatch>();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
+  const user = session?.user;
+  const userImage = user?.image;
+  const userName = user?.name;
 
   const router = useRouter();
 
@@ -112,20 +115,37 @@ const Navigation: React.FC<NavigationProps> = ({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="ml-6">
-                  <UserCircle className="h-8 w-8 text-gray-500 hover:text-gray-800" />
+                  {userImage ? (
+                    <img
+                      src={userImage}
+                      alt="Profile"
+                      className="h-8 w-8 rounded-full"
+                    />
+                  ) : (
+                    <UserCircle className="h-8 w-8 text-gray-500 hover:text-gray-800" />
+                  )}
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="start">
                 {isAuthenticated ? (
                   <>
-                    <DropdownMenuItem onClick={handleLogout}>
-                      <LogOut className="mr-2 h-4 w-4" /> Logout
-                    </DropdownMenuItem>
+                    {userName && (
+                      <div className="mb-4">
+                        <span className="text-darkText muted dark:text-lightText font-medium ml-2">
+                          {userName}
+                        </span>
+                        <span className="block h-0.5 w-20 mx-auto mt-1 bg-gradient-to-r from-transparent via-gray-500 to-transparent"></span>
+                      </div>
+                    )}
+
                     <DropdownMenuItem>
                       <Link href="/favorites">Favorite Locations</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <Link href="/history">Search History</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}>
+                      <LogOut className="mr-2 h-4 w-4" /> Logout
                     </DropdownMenuItem>
                   </>
                 ) : (

@@ -5,7 +5,7 @@ import { AiOutlineCloud } from "react-icons/ai";
 
 export default function Loading() {
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-black">
       <div className="text-center">
         <div className="relative">
           <AiOutlineCloud className="animate-spin text-6xl text-blue-500 dark:text-white mx-auto" />

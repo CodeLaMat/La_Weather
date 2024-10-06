@@ -76,6 +76,7 @@ const login = async (req, res) => {
       userId: user._id,
       email: user.email,
       name: user.name,
+      image: user.image,
     });
   } catch (error) {
     console.error("Login error:", error);
