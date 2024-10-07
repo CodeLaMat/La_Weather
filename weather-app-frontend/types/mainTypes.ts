@@ -6,6 +6,12 @@ export interface WeatherData {
   city: City;
 }
 
+export interface FavoriteWeatherState {
+  loading: boolean;
+  weatherData: { [cityName: string]: CurrentWeatherData };
+  error: string | null;
+}
+
 export interface WeatherItem {
   dt: number;
   main: MainInfo;
@@ -53,7 +59,12 @@ export interface Rain {
 }
 
 export interface Sys {
-  pod: string;
+  type?: number;
+  id?: number;
+  message?: number;
+  country: string;
+  sunrise: number;
+  sunset: number;
 }
 
 export interface City {
@@ -65,6 +76,22 @@ export interface City {
   timezone: number;
   sunrise: number;
   sunset: number;
+}
+
+export interface CurrentWeatherData {
+  coord: Coordinates;
+  weather: Weather[];
+  base: string;
+  main: MainInfo;
+  visibility: number;
+  wind: Wind;
+  clouds: Clouds;
+  dt: number;
+  sys: Sys;
+  timezone: number;
+  id: number;
+  name: string;
+  cod: number;
 }
 
 export interface Coordinates {

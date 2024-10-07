@@ -1,12 +1,16 @@
 "use client";
 
 import React from "react";
+import dynamic from "next/dynamic";
 import WeatherDisplay from "../components/WeatherDisplay";
 import Highlight from "../components/Highlight";
 import OtherCities from "../components/OtherCities";
-import GlobalMap from "../components/GlobalMap";
 import Sidebar from "../components/Sidebar";
 import FiveDays from "@/components/FiveDays";
+
+const WeatherMapWithNoSSR = dynamic(() => import("../components/WeatherMap"), {
+  ssr: false,
+});
 
 const Home = () => {
   return (
@@ -38,7 +42,7 @@ const Home = () => {
         </div>
         {/* Global Map (spans full width on large screens) */}
         <div className="rounded-lg p-5 shadow-lg col-span-1 lg:col-span-2 bg-lightCard dark:bg-darkCard">
-          <GlobalMap />
+          <WeatherMapWithNoSSR />
         </div>
       </div>
     </div>

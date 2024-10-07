@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -42,6 +42,18 @@ const Navigation: React.FC<NavigationProps> = ({
   const userName = user?.name;
 
   const router = useRouter();
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        dispatch(fetchWeather(latitude, longitude));
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+      }
+    );
+  }, [dispatch]);
 
   const handleSearch = () => {
     if (city) {
