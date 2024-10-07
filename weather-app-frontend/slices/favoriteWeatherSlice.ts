@@ -1,11 +1,9 @@
-// slices/favoriteWeatherSlice.ts
-
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CurrentWeatherData } from "@/types/mainTypes";
+import { WeatherData } from "@/types/mainTypes";
 
 interface FavoriteWeatherState {
   loading: boolean;
-  weatherData: { [cityName: string]: CurrentWeatherData };
+  weatherData: { [cityName: string]: WeatherData };
   error: string | null;
 }
 
@@ -25,7 +23,7 @@ const favoriteWeatherSlice = createSlice({
     },
     fetchFavoriteWeatherSuccess(
       state,
-      action: PayloadAction<{ cityName: string; data: CurrentWeatherData }>
+      action: PayloadAction<{ cityName: string; data: WeatherData }>
     ) {
       state.loading = false;
       state.weatherData[action.payload.cityName] = action.payload.data;

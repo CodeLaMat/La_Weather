@@ -1,59 +1,64 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Tooltip } from "react-leaflet";
 import { renderToString } from "react-dom/server";
 import "leaflet/dist/leaflet.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchFavoriteCitiesWeather } from "@/thunks/fetchFavoriteCitiesWeather";
 import { RootState, AppDispatch } from "@/store/store";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import L from "leaflet";
+import { FavoriteCity } from "@/types/mainTypes";
 
 const WeatherMap: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+
+  const favoriteCities: FavoriteCity[] = useSelector(
+    (state: RootState) => state.favorites.favorites
+  );
+
   const weatherData = useSelector(
     (state: RootState) => state.favoriteWeather.weatherData
   );
-  const [position, setPosition] = useState<[number, number] | null>(null);
 
-  const favoriteCities: { name: string; coords: [number, number] }[] = [
-    { name: "London", coords: [51.5074, -0.1278] },
-    { name: "New York", coords: [40.7128, -74.006] },
-    { name: "Tokyo", coords: [35.6895, 139.6917] },
-  ];
-
-  const MapMarkerIcon = () => (
-    <FontAwesomeIcon icon={faMapMarkerAlt} color="red" size="2x" />
-  );
-  const mapMarkerIconSvg = renderToString(<MapMarkerIcon />);
-  const customMarkerIcon = L.divIcon({
-    className: "custom-marker-icon",
-    html: mapMarkerIconSvg,
-    iconSize: [20, 32],
-    iconAnchor: [10, 32],
-  });
+  const [position, setPosition] = useState<{
+    name: string;
+    coords: {
+      lat: number;
+      lon: number;
+    };
+  } | null>(null);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
-        setPosition([latitude, longitude]);
+        setPosition({
+          name: "Current Location",
+          coords: { lat: latitude, lon: longitude },
+        });
       },
       () => {
-        setPosition([51.505, -0.09]);
+        setPosition({
+          name: "Default Location",
+          coords: { lat: 51.505, lon: -0.09 },
+        });
       }
     );
 
-    dispatch(fetchFavoriteCitiesWeather(favoriteCities));
-  }, [dispatch]);
-
-  // Inside your component, before the return statement
-  console.log("weatherData:", weatherData);
+    if (favoriteCities.length > 0) {
+      dispatch(fetchFavoriteCitiesWeather(favoriteCities));
+    }
+  }, [dispatch, favoriteCities]);
 
   return (
     <div className="h-[500px] w-full">
       <MapContainer
-        center={position || [51.505, -0.09]}
+        center={
+          position
+            ? [position.coords.lat, position.coords.lon]
+            : [51.505, -0.09]
+        }
         zoom={2}
         className="h-full w-full"
       >
@@ -63,32 +68,55 @@ const WeatherMap: React.FC = () => {
         />
 
         {position && (
-          <Marker position={position} icon={customMarkerIcon}>
-            <Popup>You are here!</Popup>
+          <Marker position={[position.coords.lat, position.coords.lon]}>
+            <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
+              <span>{position.name}!</span>
+            </Tooltip>
           </Marker>
         )}
 
         {favoriteCities.map((city) => {
-          const data = weatherData[city.name];
+          const data = weatherData[city.id];
 
-          const cityCoords: [number, number] = city.coords;
+          if (!data) {
+            return null;
+          }
 
-          const temperature = data?.main?.temp;
-          console.log("CITY DATA", data);
-          const cityName = data?.name || city.name;
+          const cityCoords: [number, number] = [
+            city.coords.lat,
+            city.coords.lon,
+          ];
+          const temperature = data?.list[0].main.temp;
+          const cityName = data.city.name || city.name;
+
+          const weatherIconCode = data.list[0].weather[0].icon;
+          const weatherIconUrl = `https://openweathermap.org/img/wn/${weatherIconCode}@2x.png`;
+
+          const customMarkerHtml = renderToString(
+            <div style={{ textAlign: "center" }}>
+              <img src={weatherIconUrl} alt="Weather Icon" />
+              <div style={{ fontWeight: "bold" }}>{cityName}</div>
+              <div>
+                {temperature !== undefined ? `${temperature}°C` : "N/A"}
+              </div>
+            </div>
+          );
+
+          const customIcon = L.divIcon({
+            html: customMarkerHtml,
+            className: "custom-weather-icon",
+            iconSize: [80, 80],
+            iconAnchor: [40, 80],
+          });
 
           return (
-            <Marker
-              key={city.name}
-              position={cityCoords}
-              icon={customMarkerIcon}
-            >
-              <Popup>
-                City: {cityName}
-                <br />
-                Temperature:{" "}
-                {temperature !== undefined ? `${temperature}°C` : "N/A"}
-              </Popup>
+            <Marker key={city.id} position={cityCoords} icon={customIcon}>
+              <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
+                <span>
+                  {cityName}:{" "}
+                  {temperature !== undefined ? `${temperature}°C` : "N/A"}
+                </span>
+              </Tooltip>
             </Marker>
           );
         })}

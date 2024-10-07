@@ -1,15 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "../store/store";
 import { FiMapPin } from "react-icons/fi";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { favoritesThunk } from "../thunks/favoritesThunk";
+import { FavoriteCity } from "../types/mainTypes";
+import { useSession } from "next-auth/react";
 
 const kelvinToCelsius = (kelvin: number) => (kelvin - 273.15).toFixed(1);
-const celsiusToFahrenheit = (celsius: number) =>
-  ((celsius * 9) / 5 + 32).toFixed(1);
+const celsiusToFahrenheit = (celsius: string) =>
+  ((parseFloat(celsius) * 9) / 5 + 32).toFixed(1);
 
 const WeatherDisplay = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { data: session } = useSession();
+  const token = session?.accessToken;
+  const userId = session?.user?.id;
+
+  console.log("Token:", token);
+
   const [isCelsius, setIsCelsius] = useState(true);
 
   const weatherData = useSelector(
@@ -18,9 +29,27 @@ const WeatherDisplay = () => {
   const loading = useSelector((state: RootState) => state.weather.loading);
   const error = useSelector((state: RootState) => state.weather.error);
 
+  const favorites = useSelector(
+    (state: RootState) => state.favorites.favorites
+  );
+  const favoritesLoading = useSelector(
+    (state: RootState) => state.favorites.loading
+  );
+  const favoritesError = useSelector(
+    (state: RootState) => state.favorites.error
+  );
+
+  useEffect(() => {
+    if (token) {
+      dispatch(favoritesThunk("fetch", userId));
+    }
+  }, [dispatch, token]);
+
+  console.log("Favorites", favorites);
+
   const toggleTemperature = () => setIsCelsius(!isCelsius);
 
-  if (loading) {
+  if (loading || favoritesLoading) {
     return <p className="text-darkText dark:text-lightText">Loading...</p>;
   }
   if (error) {
@@ -32,6 +61,10 @@ const WeatherDisplay = () => {
     );
   }
 
+  if (favoritesError) {
+    console.error(favoritesError);
+  }
+
   const weather = weatherData.list[0];
   const temperatureCelsius = kelvinToCelsius(weather.main.temp);
   const feelsLikeCelsius = kelvinToCelsius(weather.main.feels_like);
@@ -41,18 +74,47 @@ const WeatherDisplay = () => {
 
   const temperature = isCelsius
     ? `${temperatureCelsius}°C`
-    : `${celsiusToFahrenheit(parseFloat(temperatureCelsius))}°F`;
+    : `${celsiusToFahrenheit(temperatureCelsius)}°F`;
 
   const feelsLike = isCelsius
     ? `${feelsLikeCelsius}°C`
-    : `${celsiusToFahrenheit(parseFloat(feelsLikeCelsius))}°F`;
+    : `${celsiusToFahrenheit(feelsLikeCelsius)}°F`;
 
   const temperatureMin = isCelsius
     ? `${temperatureMinCelsius}°C`
-    : `${celsiusToFahrenheit(parseFloat(temperatureMinCelsius))}°F`;
+    : `${celsiusToFahrenheit(temperatureMinCelsius)}°F`;
 
   const iconCode = weather.weather[0].icon;
   const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
+  const isFavorite = favorites.some(
+    (city) => city.id === weatherData.city.id.toString()
+  );
+
+  const handleFavoriteClick = () => {
+    if (!userId) {
+      console.error("User ID is not available");
+      return;
+    }
+
+    const cityData: FavoriteCity = {
+      id: weatherData.city.id.toString(),
+      name: weatherData.city.name,
+      country: weatherData.city.country,
+      coords: {
+        lat: weatherData.city.coord.lat,
+        lon: weatherData.city.coord.lon,
+      },
+    };
+
+    if (isFavorite) {
+      dispatch(
+        favoritesThunk("remove", token, { userId, cityId: cityData.id })
+      );
+    } else {
+      dispatch(favoritesThunk("add", token, { userId, city: cityData }));
+    }
+  };
 
   return (
     <div className="p-2 max-w-md mx-auto relative text-darkText dark:text-lightText">
@@ -62,6 +124,14 @@ const WeatherDisplay = () => {
             <FiMapPin className="text-xl" />
             {weatherData.city.name}, {weatherData.city.country}
           </span>
+          {/* Favorite Button */}
+          <button onClick={handleFavoriteClick} className="focus:outline-none">
+            {isFavorite ? (
+              <FaHeart className="text-red-500 text-2xl" />
+            ) : (
+              <FaRegHeart className="text-gray-500 text-2xl" />
+            )}
+          </button>
         </div>
         <button
           onClick={toggleTemperature}

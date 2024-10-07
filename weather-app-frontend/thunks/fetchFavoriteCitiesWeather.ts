@@ -5,18 +5,20 @@ import {
   fetchFavoriteWeatherSuccess,
   fetchFavoriteWeatherFailure,
 } from "../slices/favoriteWeatherSlice";
-import { CurrentWeatherData } from "@/types/mainTypes";
+import { WeatherData } from "@/types/mainTypes";
 
 export const fetchFavoriteCitiesWeather =
-  (cities: { name: string; coords: [number, number] }[]): AppThunk =>
+  (
+    cities: { name: string; coords: { lat: number; lon: number } }[]
+  ): AppThunk =>
   async (dispatch) => {
     dispatch(fetchFavoriteWeatherStart());
 
     try {
       const requests = cities.map(async (city) => {
-        const url = `${process.env.NEXT_PUBLIC_OPENWEATHER_LINK}lat=${city.coords[0]}&lon=${city.coords[1]}&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}&units=metric`;
+        const url = `${process.env.NEXT_PUBLIC_OPENWEATHER_LINK}lat=${city.coords.lat}&lon=${city.coords.lon}&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}&units=metric`;
 
-        const response = await axios.get<CurrentWeatherData>(url);
+        const response = await axios.get<WeatherData>(url);
         console.log(`API response for city ${city.name}:`, response.data);
 
         if (response.status === 200 && response.data) {

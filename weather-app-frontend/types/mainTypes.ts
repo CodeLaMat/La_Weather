@@ -6,12 +6,6 @@ export interface WeatherData {
   city: City;
 }
 
-export interface FavoriteWeatherState {
-  loading: boolean;
-  weatherData: { [cityName: string]: CurrentWeatherData };
-  error: string | null;
-}
-
 export interface WeatherItem {
   dt: number;
   main: MainInfo;
@@ -31,10 +25,10 @@ export interface MainInfo {
   temp_min: number;
   temp_max: number;
   pressure: number;
-  sea_level: number;
-  grnd_level: number;
+  sea_level?: number;
+  grnd_level?: number;
   humidity: number;
-  temp_kf: number;
+  temp_kf?: number;
 }
 
 export interface Weather {
@@ -51,7 +45,7 @@ export interface Clouds {
 export interface Wind {
   speed: number;
   deg: number;
-  gust: number;
+  gust?: number;
 }
 
 export interface Rain {
@@ -59,12 +53,7 @@ export interface Rain {
 }
 
 export interface Sys {
-  type?: number;
-  id?: number;
-  message?: number;
-  country: string;
-  sunrise: number;
-  sunset: number;
+  pod: string;
 }
 
 export interface City {
@@ -74,24 +63,8 @@ export interface City {
   country: string;
   population: number;
   timezone: number;
-  sunrise: number;
-  sunset: number;
-}
-
-export interface CurrentWeatherData {
-  coord: Coordinates;
-  weather: Weather[];
-  base: string;
-  main: MainInfo;
-  visibility: number;
-  wind: Wind;
-  clouds: Clouds;
-  dt: number;
-  sys: Sys;
-  timezone: number;
-  id: number;
-  name: string;
-  cod: number;
+  sunrise?: number;
+  sunset?: number;
 }
 
 export interface Coordinates {
@@ -138,4 +111,11 @@ export interface LoginUserResponse {
 
 export interface AuthError {
   message: string;
+}
+
+export interface FavoriteCity {
+  id: string;
+  name: string;
+  country: string;
+  coords: { lat: number; lon: number };
 }

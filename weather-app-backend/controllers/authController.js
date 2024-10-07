@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const User = require("../models/User");
+const Profile = require("../models/Profile");
 const { jwtSecret } = require("../config/config");
 const transporter = require("../config/transporter");
 
@@ -21,11 +22,28 @@ const register = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = new User({
+    const userData = {
       name: `${name} ${surname}`,
       email,
       hashPassword: hashedPassword,
+      username: email,
+    };
+
+    const newUser = new User(userData);
+    await newUser.save();
+
+    const newProfile = new Profile({
+      user: newUser._id,
+      email: newUser.email,
+      bio: "",
+      location: { city: "", country: "", coords: 0 },
+      notifications: [],
+      favoriteCities: [],
     });
+
+    await newProfile.save();
+
+    newUser.profile = newProfile._id;
     await newUser.save();
 
     const mailOptions = {
@@ -33,10 +51,10 @@ const register = async (req, res) => {
       to: email,
       subject: "You have successfully registered",
       html: `
-      <p>Dear ${name} ,</p>
-       <p>You have been registered in LaWeather platform. </p>
-        <p>Thank you for registering with us. </p>
-        <p>Best regards, </p>
+        <p>Dear ${name},</p>
+        <p>You have been registered on the LaWeather platform.</p>
+        <p>Thank you for registering with us.</p>
+        <p>Best regards,</p>
         <p>LaWeather Team</p>
       `,
     };
@@ -46,7 +64,9 @@ const register = async (req, res) => {
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     console.error("Registration error:", error);
-    res.status(500).json({ message: "Error registering user" });
+    res
+      .status(500)
+      .json({ message: "Error registering user", error: error.message });
   }
 };
 

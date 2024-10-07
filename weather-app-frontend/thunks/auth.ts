@@ -1,7 +1,6 @@
 import { backendApiRoutes } from "@/lib/apiRoutes";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { startLoading, stopLoading } from "@/slices/loadingSlice";
-import { LoginUserArgs, LoginUserResponse } from "@/types/mainTypes";
 
 export const registerUser = createAsyncThunk(
   "auth/register",
@@ -117,40 +116,40 @@ export const resetPassword = createAsyncThunk(
   }
 );
 
-export const loginUser = createAsyncThunk<
-  LoginUserResponse,
-  LoginUserArgs,
-  { rejectValue: string }
->("auth/login", async ({ email, password }, { rejectWithValue, dispatch }) => {
-  dispatch(startLoading("isLoggingIn"));
-  try {
-    const response = await fetch(`${backendApiRoutes.LOGIN}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
+// export const loginUser = createAsyncThunk<
+//   LoginUserResponse,
+//   LoginUserArgs,
+//   { rejectValue: string }
+// >("auth/login", async ({ email, password }, { rejectWithValue, dispatch }) => {
+//   dispatch(startLoading("isLoggingIn"));
+//   try {
+//     const response = await fetch(`${backendApiRoutes.LOGIN}`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ email, password }),
+//     });
 
-    if (!response.ok) {
-      const data = await response.json();
-      console.log(data);
-      throw new Error(data.message || "Login failed");
-    }
+//     if (!response.ok) {
+//       const data = await response.json();
+//       console.log(data);
+//       throw new Error(data.message || "Login failed");
+//     }
 
-    const data: LoginUserResponse = await response.json();
-    return data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    if (error instanceof Error) {
-      return rejectWithValue(error.message);
-    } else {
-      return rejectWithValue("An unknown error occurred");
-    }
-  } finally {
-    dispatch(stopLoading("isLoggingIn"));
-  }
-});
+//     const data: LoginUserResponse = await response.json();
+//     return data;
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   } catch (error: any) {
+//     if (error instanceof Error) {
+//       return rejectWithValue(error.message);
+//     } else {
+//       return rejectWithValue("An unknown error occurred");
+//     }
+//   } finally {
+//     dispatch(stopLoading("isLoggingIn"));
+//   }
+// });
 
 export const logoutUser = createAsyncThunk(
   "auth/logout",

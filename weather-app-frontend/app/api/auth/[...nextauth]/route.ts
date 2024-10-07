@@ -1,4 +1,6 @@
 import NextAuth from "next-auth";
+import { JWT } from "next-auth/jwt";
+import { User, Session } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { backendApiRoutes } from "@/lib/apiRoutes";
@@ -15,7 +17,7 @@ const handler = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<User | null> {
         if (!credentials) {
           console.error("Missing credentials");
           return null;
@@ -35,15 +37,23 @@ const handler = NextAuth({
             throw new Error(errorResponse.message || "Login failed");
           }
 
-          const user = await res.json();
-          if (res.ok && user) {
-            console.log(user);
+          const data = await res.json();
+
+          if (data && data.userId && data.email) {
+            const user: User = {
+              id: data.userId,
+              email: data.email,
+              name: data.name,
+              image: data.image,
+              accessToken: data.token,
+            };
             return user;
+          } else {
+            return null;
           }
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          console.error("Login error:", error.message);
-          throw new Error(error.message || "Login error");
+        } catch (error) {
+          console.error("Login error:", error);
+          throw new Error("Login error");
         }
       },
     }),
@@ -55,26 +65,19 @@ const handler = NextAuth({
     newUser: "/auth/signup",
   },
   callbacks: {
-    async session({ session, token, user }) {
-      // Add the image from the token or user object to the session
-      if (!session.user) {
-        session.user = {};
-      }
-      if (token?.image) {
-        session.user.image = token.image as string;
-      } else if (user?.image) {
-        session.user.image = user.image as string;
-      } else {
-        session.user.image = "";
-      }
-      return session;
-    },
-    async jwt({ token, user }) {
-      // Add image to JWT token
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
+        token.accessToken = user.accessToken;
+        token.id = user.id;
         token.image = user.image || "";
       }
       return token;
+    },
+    async session({ session, token }: { session: Session; token: JWT }) {
+      session.user.id = token.id as string;
+      session.user.image = token.image as string;
+      session.accessToken = token.accessToken as string;
+      return session;
     },
   },
   debug: process.env.NODE_ENV === "development",

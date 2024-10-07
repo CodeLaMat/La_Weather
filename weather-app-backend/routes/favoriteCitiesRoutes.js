@@ -1,15 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const favorites = require("../controllers/favoriteCitiesController");
+const authenticate = require("../middlewares/auth");
+const {
+  addFavoriteCity,
+  removeCity,
+  getFavoriteCities,
+} = require("../controllers/favoriteCitiesController");
 
-// Register Route
-//POST api/favorites
-router.post("/add", favorites.addCity);
-
-// Remove Route
-router.delete("/remove", favorites.remove);
-
-// GET Route
-router.get("/", favorites.getCity);
+router.post("/add", authenticate, addFavoriteCity);
+router.post("/remove", authenticate, removeCity);
+router.post("/", authenticate, getFavoriteCities);
 
 module.exports = router;

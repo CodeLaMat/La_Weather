@@ -26,8 +26,7 @@ export default function SignUpForm() {
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    dispatch(startLoading("isLoggingIn"));
+    console.log("handleSignUp called");
     try {
       const resultAction = await dispatch(
         registerUser({ name, surname, email, password })
@@ -43,7 +42,6 @@ export default function SignUpForm() {
     } catch (error: any) {
       toast.error(`Error: ${error.message}`);
     } finally {
-      dispatch(stopLoading("isLoggingIn"));
     }
   };
 

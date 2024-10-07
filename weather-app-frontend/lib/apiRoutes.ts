@@ -14,6 +14,9 @@ export const backendApiRoutes = {
   LOGOUT: `${BACKEND_URL}/auth/logout`, // POST
   REGISTER: `${BACKEND_URL}/auth/register`, // POST
   USER: `${BACKEND_URL}/auth/user`, // GET
-  REQUEST_PASSWORD_RESET: `${BACKEND_URL}/auth/request-password-reset`, // POST
+  FAVORITES: `${BACKEND_URL}/api/favorites`, // GET
+  ADD_FAVORITE: `${BACKEND_URL}/api/favorites/add`, // POST
+  REMOVE_FAVORITE: `${BACKEND_URL}/api/favorites/remove`, // POST
   RESET_PASSWORD: `${BACKEND_URL}/auth/reset-password`, // POST
+  REQUEST_PASSWORD_RESET: `${BACKEND_URL}/auth/request-password-reset`, // POST
 };
