@@ -9,6 +9,8 @@ import { fetchFavoriteCitiesWeather } from "@/thunks/fetchFavoriteCitiesWeather"
 import { RootState, AppDispatch } from "@/store/store";
 import L from "leaflet";
 import { FavoriteCity } from "@/types/mainTypes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 
 const WeatherMap: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,6 +23,8 @@ const WeatherMap: React.FC = () => {
     (state: RootState) => state.favoriteWeather.weatherData
   );
 
+  console.log("WEATHERDATA", weatherData);
+
   const [position, setPosition] = useState<{
     name: string;
     coords: {
@@ -28,6 +32,17 @@ const WeatherMap: React.FC = () => {
       lon: number;
     };
   } | null>(null);
+
+  const mapMarkerIconSvg = renderToString(
+    <FontAwesomeIcon icon={faMapMarkerAlt} color="red" size="3x" />
+  );
+
+  const customMarkerIcon = L.divIcon({
+    className: "custom-marker-icon",
+    html: mapMarkerIconSvg,
+    iconSize: [30, 42],
+    iconAnchor: [15, 42],
+  });
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -68,7 +83,10 @@ const WeatherMap: React.FC = () => {
         />
 
         {position && (
-          <Marker position={[position.coords.lat, position.coords.lon]}>
+          <Marker
+            position={[position.coords.lat, position.coords.lon]}
+            icon={customMarkerIcon}
+          >
             <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
               <span>{position.name}!</span>
             </Tooltip>
@@ -76,7 +94,7 @@ const WeatherMap: React.FC = () => {
         )}
 
         {favoriteCities.map((city) => {
-          const data = weatherData[city.id];
+          const data = weatherData[city.name];
 
           if (!data) {
             return null;
@@ -86,16 +104,14 @@ const WeatherMap: React.FC = () => {
             city.coords.lat,
             city.coords.lon,
           ];
-          const temperature = data?.list[0].main.temp;
-          const cityName = data.city.name || city.name;
+          const temperature = data?.list[0]?.main?.temp;
 
-          const weatherIconCode = data.list[0].weather[0].icon;
+          const weatherIconCode = data.list[0]?.weather[0]?.icon;
           const weatherIconUrl = `https://openweathermap.org/img/wn/${weatherIconCode}@2x.png`;
 
           const customMarkerHtml = renderToString(
             <div style={{ textAlign: "center" }}>
               <img src={weatherIconUrl} alt="Weather Icon" />
-              <div style={{ fontWeight: "bold" }}>{cityName}</div>
               <div>
                 {temperature !== undefined ? `${temperature}°C` : "N/A"}
               </div>
@@ -113,7 +129,6 @@ const WeatherMap: React.FC = () => {
             <Marker key={city.id} position={cityCoords} icon={customIcon}>
               <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
                 <span>
-                  {cityName}:{" "}
                   {temperature !== undefined ? `${temperature}°C` : "N/A"}
                 </span>
               </Tooltip>
