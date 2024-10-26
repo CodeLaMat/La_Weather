@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import { JWT } from "next-auth/jwt";
-import { User, Session } from "next-auth";
+import { User, Session, Account } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { backendApiRoutes } from "@/lib/apiRoutes";
@@ -38,7 +38,6 @@ const handler = NextAuth({
           }
 
           const data = await res.json();
-
           if (data && data.userId && data.email) {
             const user: User = {
               id: data.userId,
@@ -65,14 +64,65 @@ const handler = NextAuth({
     newUser: "/auth/signup",
   },
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: User }) {
+    async jwt({
+      token,
+      account,
+      user,
+    }: {
+      token: JWT;
+      account?: Account | null;
+      user?: User;
+    }) {
+      if (account?.provider === "google" && account?.access_token) {
+        // Handling Google sign-in
+        try {
+          const response = await fetch(
+            `${backendApiRoutes.CREATE_GOOGLE_USER}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: user?.email,
+                name: user?.name,
+                image: user?.image,
+              }),
+            }
+          );
+          console.log("API Response Status:", response.status);
+
+          if (!response.ok) {
+            console.error(
+              "Failed to create user in backend during Google sign-in"
+            );
+            throw new Error(
+              "Failed to create user in backend during Google sign-in"
+            );
+          }
+
+          const result = await response.json();
+          console.log("Google User Creation Result:", result);
+
+          token.id = result.userId;
+          token.image = user?.image || "";
+          token.accessToken = account.access_token;
+        } catch (error) {
+          console.error("Error during Google sign-in:", error);
+          throw error;
+        }
+      }
+
+      // For custom credentials login
       if (user) {
-        token.accessToken = user.accessToken;
         token.id = user.id;
         token.image = user.image || "";
+        token.accessToken = user.accessToken || token.accessToken;
       }
+
       return token;
     },
+
     async session({ session, token }: { session: Session; token: JWT }) {
       session.user.id = token.id as string;
       session.user.image = token.image as string;

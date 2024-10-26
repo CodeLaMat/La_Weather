@@ -38,64 +38,64 @@ export const favoritesThunk =
       console.error("No access token available");
       return;
     }
+
     const headers = {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     };
 
-    switch (actionType) {
-      case "fetch":
-        dispatch(fetchFavoritesStart());
-        try {
-          const { userId } = payload as FetchPayload;
+    try {
+      switch (actionType) {
+        case "fetch":
+          dispatch(fetchFavoritesStart());
+          try {
+            const { userId } = payload as FetchPayload;
+            const response = await axios.post<{
+              favoriteCities: FavoriteCity[];
+            }>(backendApiRoutes.FAVORITES, { userId }, { headers });
+            dispatch(fetchFavoritesSuccess(response.data.favoriteCities));
+          } catch (error: unknown) {
+            const errorMessage = getErrorMessage(error);
+            dispatch(fetchFavoritesFailure(errorMessage));
+          }
+          break;
 
-          const response = await axios.post<{ favoriteCities: FavoriteCity[] }>(
-            backendApiRoutes.FAVORITES,
-            { userId },
-            { headers }
-          );
+        case "add":
+          dispatch(addFavoriteStart());
+          try {
+            const { userId, city } = payload as AddPayload;
+            const response = await axios.post<{ city: FavoriteCity }>(
+              backendApiRoutes.ADD_FAVORITE,
+              { userId, city },
+              { headers }
+            );
+            dispatch(addFavoriteSuccess(response.data.city));
+          } catch (error: unknown) {
+            const errorMessage = getErrorMessage(error);
+            dispatch(addFavoriteFailure(errorMessage));
+          }
+          break;
 
-          dispatch(fetchFavoritesSuccess(response.data.favoriteCities));
-        } catch (error: unknown) {
-          const errorMessage = getErrorMessage(error);
-          dispatch(fetchFavoritesFailure(errorMessage));
-        }
-        break;
+        case "remove":
+          dispatch(removeFavoriteStart());
+          try {
+            const { userId, cityId } = payload as RemovePayload;
+            await axios.post(
+              backendApiRoutes.REMOVE_FAVORITE,
+              { userId, cityId },
+              { headers }
+            );
+            dispatch(removeFavoriteSuccess(cityId));
+          } catch (error: unknown) {
+            const errorMessage = getErrorMessage(error);
+            dispatch(removeFavoriteFailure(errorMessage));
+          }
+          break;
 
-      case "add":
-        dispatch(addFavoriteStart());
-        try {
-          const { userId, city } = payload as AddPayload;
-          console.log("addFavorites", userId, city);
-          const response = await axios.post<{ city: FavoriteCity }>(
-            backendApiRoutes.ADD_FAVORITE,
-            { userId, city },
-            { headers }
-          );
-          dispatch(addFavoriteSuccess(response.data.city));
-        } catch (error: unknown) {
-          const errorMessage = getErrorMessage(error);
-          dispatch(addFavoriteFailure(errorMessage));
-        }
-        break;
-
-      case "remove":
-        dispatch(removeFavoriteStart());
-        try {
-          const { userId, cityId } = payload as RemovePayload;
-          await axios.post(
-            backendApiRoutes.REMOVE_FAVORITE,
-            { userId, cityId },
-            { headers }
-          );
-          dispatch(removeFavoriteSuccess(cityId));
-        } catch (error: unknown) {
-          const errorMessage = getErrorMessage(error);
-          dispatch(removeFavoriteFailure(errorMessage));
-        }
-        break;
-
-      default:
-        throw new Error("Invalid action type");
+        default:
+          throw new Error("Invalid action type");
+      }
+    } catch (error) {
+      console.error("Unexpected error in favoritesThunk:", error);
     }
   };

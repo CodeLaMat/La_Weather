@@ -11,8 +11,9 @@ const BACKEND_URL =
 export const backendApiRoutes = {
   INDEX: `${BACKEND_URL}`,
   LOGIN: `${BACKEND_URL}/auth/login`, // POST
-  LOGOUT: `${BACKEND_URL}/auth/logout`, // POST
   REGISTER: `${BACKEND_URL}/auth/register`, // POST
+  LOGOUT: `${BACKEND_URL}/auth/logout`, // POST
+  CREATE_GOOGLE_USER: `${BACKEND_URL}/auth/create-google-user`, // POST
   USER: `${BACKEND_URL}/auth/user`, // GET
   FAVORITES: `${BACKEND_URL}/api/favorites`, // GET
   ADD_FAVORITE: `${BACKEND_URL}/api/favorites/add`, // POST

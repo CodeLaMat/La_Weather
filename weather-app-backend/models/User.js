@@ -8,7 +8,9 @@ const userSchema = new mongoose.Schema({
   },
   hashPassword: {
     type: String,
-    required: true,
+    required: function () {
+      return !this.oauthProvider;
+    },
   },
   name: {
     type: String,
@@ -23,13 +25,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "https://api.dicebear.com/9.x/glass/svg?seed=Maria",
   },
-
   resetPasswordToken: {
     type: String,
     default: null,
   },
   resetPasswordExpires: {
     type: Date,
+    default: null,
+  },
+  oauthProvider: {
+    type: String,
+    enum: ["google", "facebook", "github"],
     default: null,
   },
 });

@@ -210,10 +210,57 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const createGoogleUser = async (req, res) => {
+  const { email, name, image } = req.body;
+
+  if (!email || !name) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  try {
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = new User({
+        name,
+        email,
+        image,
+        username: email,
+        oauthProvider: "google",
+      });
+
+      await user.save();
+
+      const profile = new Profile({
+        user: user._id,
+        email: user.email,
+        bio: "",
+        location: { city: "", country: "", coords: 0 },
+        notifications: [],
+        favoriteCities: [],
+      });
+
+      await profile.save();
+      user.profile = profile._id;
+      await user.save();
+    }
+
+    res
+      .status(200)
+      .json({ userId: user._id, email, name: user.name, image: user.image });
+  } catch (error) {
+    console.error("Error creating Google user:", error);
+    res
+      .status(500)
+      .json({ message: "Error creating user", error: error.message });
+  }
+};
+
 module.exports = {
   register,
   login,
   logout,
   requestPasswordReset,
   resetPassword,
+  createGoogleUser,
 };

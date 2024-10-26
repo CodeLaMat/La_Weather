@@ -29,4 +29,7 @@ router.post(
 // Reset Password Route
 router.post("/reset-password", authController.resetPassword);
 
+// Create Google User Route (New)
+router.post("/create-google-user", authController.createGoogleUser);
+
 module.exports = router;
