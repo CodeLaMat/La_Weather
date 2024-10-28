@@ -19,7 +19,7 @@ const WeatherDisplay = () => {
   const token = session?.accessToken;
   const userId = session?.user?.id;
 
-  console.log("Token:", token);
+  console.log("USER İD:", userId);
 
   const [isCelsius, setIsCelsius] = useState(true);
 
@@ -40,12 +40,10 @@ const WeatherDisplay = () => {
   );
 
   useEffect(() => {
-    if (token) {
-      dispatch(favoritesThunk("fetch", userId));
+    if (token && userId) {
+      dispatch(favoritesThunk("fetch", token, { userId }));
     }
-  }, [dispatch, token]);
-
-  console.log("Favorites", favorites);
+  }, [dispatch, token, userId]);
 
   const toggleTemperature = () => setIsCelsius(!isCelsius);
 

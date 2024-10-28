@@ -9,11 +9,11 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Input } from "@/components/ui/input";
 import { Moon, Search, Sun, LogOut, LogIn, UserCircle } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { fetchWeather } from "../thunks/fetchWeather";
 import { logoutThunk } from "../thunks/logoutThunk";
 import { useRouter } from "next/navigation";
-import { AppDispatch, RootState } from "../store/store";
+import { AppDispatch } from "../store/store";
 import Link from "next/link";
 import { CardTitle } from "./ui/card";
 import {
@@ -45,12 +45,6 @@ const Navigation: React.FC<NavigationProps> = ({
   const token = session?.accessToken;
 
   const router = useRouter();
-
-  const favorites = useSelector(
-    (state: RootState) => state.favorites.favorites
-  );
-
-  console.log("Favorites in NAV", favorites);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(

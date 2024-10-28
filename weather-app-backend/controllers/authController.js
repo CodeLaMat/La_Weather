@@ -245,9 +245,12 @@ const createGoogleUser = async (req, res) => {
       await user.save();
     }
 
-    res
-      .status(200)
-      .json({ userId: user._id, email, name: user.name, image: user.image });
+    res.status(200).json({
+      userId: user._id,
+      email: user.email,
+      name: user.name,
+      image: user.image,
+    });
   } catch (error) {
     console.error("Error creating Google user:", error);
     res

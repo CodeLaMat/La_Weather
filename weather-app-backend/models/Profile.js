@@ -12,8 +12,7 @@ const FavoriteCitySchema = new mongoose.Schema({
 
 const profileSchema = new mongoose.Schema({
   user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
     required: true,
     unique: true,
   },

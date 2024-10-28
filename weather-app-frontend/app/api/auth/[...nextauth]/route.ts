@@ -4,11 +4,14 @@ import { User, Session, Account } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { backendApiRoutes } from "@/lib/apiRoutes";
+import { OAuth2Client } from "google-auth-library";
+
+const clientId = process.env.GOOGLE_CLIENT_ID || "";
 
 const handler = NextAuth({
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientId,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
     CredentialsProvider({
@@ -73,8 +76,12 @@ const handler = NextAuth({
       account?: Account | null;
       user?: User;
     }) {
+      // Handle Google sign-in
       if (account?.provider === "google" && account?.access_token) {
-        // Handling Google sign-in
+        token.accessToken = account.access_token;
+        token.refreshToken = account.refresh_token;
+        token.expiresAt = (account.expires_at || 0) * 1000;
+
         try {
           const response = await fetch(
             `${backendApiRoutes.CREATE_GOOGLE_USER}`,
@@ -82,6 +89,7 @@ const handler = NextAuth({
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${account.access_token}`,
               },
               body: JSON.stringify({
                 email: user?.email,
@@ -90,7 +98,6 @@ const handler = NextAuth({
               }),
             }
           );
-          console.log("API Response Status:", response.status);
 
           if (!response.ok) {
             console.error(
@@ -102,22 +109,28 @@ const handler = NextAuth({
           }
 
           const result = await response.json();
-          console.log("Google User Creation Result:", result);
-
           token.id = result.userId;
           token.image = user?.image || "";
-          token.accessToken = account.access_token;
         } catch (error) {
           console.error("Error during Google sign-in:", error);
           throw error;
         }
       }
 
-      // For custom credentials login
+      // Handle regular credentials login
       if (user) {
         token.id = user.id;
         token.image = user.image || "";
         token.accessToken = user.accessToken || token.accessToken;
+      }
+
+      // Refresh token if expired
+      if (Date.now() > (token.expiresAt as number)) {
+        const refreshedToken = await refreshGoogleToken(
+          token.refreshToken as string
+        );
+        token.accessToken = refreshedToken.accessToken;
+        token.expiresAt = refreshedToken.expiresAt;
       }
 
       return token;
@@ -133,5 +146,21 @@ const handler = NextAuth({
   debug: process.env.NODE_ENV === "development",
   secret: process.env.NEXTAUTH_SECRET,
 });
+
+async function refreshGoogleToken(refreshToken: string) {
+  try {
+    const client = new OAuth2Client(clientId);
+    const response = await client.getToken(refreshToken);
+
+    const newToken = response.tokens;
+    return {
+      accessToken: newToken.access_token,
+      expiresAt: newToken.expiry_date || 0,
+    };
+  } catch (error) {
+    console.error("Failed to refresh Google access token:", error);
+    throw new Error("Failed to refresh Google access token");
+  }
+}
 
 export { handler as GET, handler as POST };

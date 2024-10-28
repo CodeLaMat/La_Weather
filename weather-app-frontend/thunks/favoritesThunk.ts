@@ -18,7 +18,7 @@ type FavoritesAction = "fetch" | "add" | "remove";
 type AddPayload = { userId: string; city: FavoriteCity };
 type FetchPayload = { userId: string };
 type RemovePayload = { userId: string; cityId: string };
-type FavoritesPayload = AddPayload | RemovePayload | undefined;
+type FavoritesPayload = FetchPayload | AddPayload | RemovePayload | undefined;
 
 const getErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
