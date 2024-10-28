@@ -24,6 +24,12 @@ import {
 } from "./ui/dropdown-menu";
 import { useSession } from "next-auth/react";
 import { favoritesThunk } from "@/thunks/favoritesThunk";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface NavigationProps {
   toggleTheme: () => void;
@@ -160,10 +166,28 @@ const Navigation: React.FC<NavigationProps> = ({
                     )}
 
                     <DropdownMenuItem>
-                      <Link href="/favorites">Favorite Locations</Link>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Link href="/">Favorite Locations</Link>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <span>This feature will be activated in V2</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      <Link href="/history">Search History</Link>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Link href="/">Search History</Link>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <span>This feature will be activated in V2</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout}>
                       <LogOut className="mr-2 h-4 w-4" /> Logout
