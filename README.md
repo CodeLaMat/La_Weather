@@ -23,6 +23,7 @@ Welcome to the **LaWeather App**, a full-stack application that provides real-ti
 ### User Authentication
 
 - **Register, Login, and Logout functionalities.**
+- **OAuth2-based authentication with Google.**
 - **Secure password handling with hashing.**
 
 ### Forgot Your Password
@@ -34,6 +35,19 @@ Welcome to the **LaWeather App**, a full-stack application that provides real-ti
 
 - **Fetches current weather information based on user location.**
 - **Displays temperature, humidity, wind speed, and more.**
+- **Displays detailed weather info for the user's current location by default.**
+
+### Favorite Cities Management
+
+- **Add and manage your favorite cities.**
+- **View weather details for your favorite cities.**
+- **Interactive weather map for favorite cities.**
+- **Limit of two cities initially, with a “See All” button to view the rest.**
+
+### Interactive Weather Map
+
+- **Displays weather data visually using markers.**
+- **Interactive icons indicating current weather conditions.**
 
 ### Responsive Design
 
@@ -55,6 +69,7 @@ Welcome to the **LaWeather App**, a full-stack application that provides real-ti
 ### Clean and Intuitive UI
 
 - **Modern design with smooth animations.**
+- **Tooltips for icons to indicate features available in future versions.**
 
 ## Demo
 
@@ -73,6 +88,8 @@ _Click the image above to watch the demo._
 - **[Redux Toolkit](https://redux-toolkit.js.org/)** - State management.
 - **[TypeScript](https://www.typescriptlang.org/)** - Typed superset of JavaScript.
 - **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework.
+- **[Leaflet](https://leafletjs.com/)** - Interactive maps.
+- **[shadcn/ui](https://github.com/shadcn/ui)** - Tooltip components.
 - **[Sonner](https://github.com/brillout/sonner)** - Toast notifications.
 
 ### Backend
@@ -129,36 +146,42 @@ Follow these steps to set up the Weather App locally on your machine.
    Create a `.env` file in the `weather-app-backend` directory and add the following:
 
    ```env
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
    PORT=5000
-   MONGODB_URI=your_mongodb_connection_string
+   MONGO_URI=your_mongodb_connection_string
    JWT_SECRET=your_jwt_secret_key
-   EMAIL_SERVICE=Gmail
+   EMAIL_SERVICE_HOST = "gmail"
    EMAIL_FROM=your_email@example.com
    EMAIL_PASSWORD=your_email_password
+   EMAIL_SERVICE_USER = your_email@example.com
    CLIENT_URL=http://localhost:3000
+
    ```
 
-   **Notes:**
+````
 
-   - Replace `your_mongodb_connection_string` with your MongoDB URI.
-   - Replace `your_jwt_secret_key` with a secure key for JWT.
-   - Replace email credentials with your actual details. Consider using app-specific passwords for Gmail.
+**Notes:**
+
+- Replace `your_mongodb_connection_string` with your MongoDB URI.
+- Replace `your_jwt_secret_key` with a secure key for JWT.
+- Replace email credentials with your actual details. Consider using app-specific passwords for Gmail.
 
 5. **Start the Backend Server**
 
-   Using npm:
+Using npm:
 
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run dev
+````
 
-   Or using Yarn:
+Or using Yarn:
 
-   ```bash
-   yarn dev
-   ```
+```bash
+yarn dev
+```
 
-   The server should be running at `http://localhost:5000`.
+The server should be running at `http://localhost:5000`.
 
 ### Frontend Setup
 
@@ -186,15 +209,28 @@ Follow these steps to set up the Weather App locally on your machine.
 
 3. **Configure Environment Variables**
 
+   Create a `.env` file in the `weather-app-frontend` directory and add the following:
+
+   `````env
+   GOOGLE_CLIENT_ID=your-client-id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   NEXTAUTH_SECRET=your_next_auth_secret
+   NODE_ENV=development
+   NEXTAUTH_URL=http://localhost:3000
+   NEXT_PUBLIC_BACKEND_IP_ADDRESS=localhost
+   NEXT_PUBLIC_BACKEND_PORT=5000   ```
+
    Create a `.env.local` file in the `weather-app-frontend` directory and add the following:
 
-   ```env
-   NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
-   ```
+   ````env.local --
+   NEXT_PUBLIC_OPENWEATHER_LINK=https://api.openweathermap.org/data/2.5/forecast?
+   NEXT_PUBLIC_OPENWEATHER_API_KEY=your-api-for-openweathermap
 
    **Notes:**
 
    - Ensure the backend URL matches where your backend server is running.
+
+   `````
 
 4. **Start the Frontend Server**
 
