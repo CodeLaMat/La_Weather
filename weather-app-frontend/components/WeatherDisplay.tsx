@@ -9,6 +9,7 @@ import { favoritesThunk } from "../thunks/favoritesThunk";
 import { FavoriteCity } from "../types/mainTypes";
 import { useSession } from "next-auth/react";
 import { fetchWeather } from "../thunks/fetchWeather";
+import { getIconUrl } from "@/lib/utils";
 
 const kelvinToCelsius = (kelvin: number) => (kelvin - 273.15).toFixed(1);
 const celsiusToFahrenheit = (celsius: string) =>
@@ -19,8 +20,6 @@ const WeatherDisplay = () => {
   const { data: session } = useSession();
   const token = session?.accessToken;
   const userId = session?.user?.id;
-
-  console.log("USER ID:", userId);
 
   const [isCelsius, setIsCelsius] = useState(true);
 
@@ -85,6 +84,7 @@ const WeatherDisplay = () => {
   const feelsLikeCelsius = kelvinToCelsius(weather.main.feels_like);
   const temperatureMinCelsius = kelvinToCelsius(weather.main.temp_min);
   const weatherDescription = weather.weather[0].description;
+  const iconCode = weather.weather[0].icon;
   const date = new Date(weather.dt_txt);
 
   const temperature = isCelsius
@@ -98,9 +98,6 @@ const WeatherDisplay = () => {
   const temperatureMin = isCelsius
     ? `${temperatureMinCelsius}°C`
     : `${celsiusToFahrenheit(temperatureMinCelsius)}°F`;
-
-  const iconCode = weather.weather[0].icon;
-  const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
   const isFavorite = favorites.some(
     (city) => city.id === weatherData.city.id.toString()
@@ -173,7 +170,11 @@ const WeatherDisplay = () => {
       </div>
 
       <div className="flex justify-center items-center my-2">
-        <img src={iconUrl} alt="Weather icon" className="w-28 h-28" />
+        <img
+          src={getIconUrl(iconCode)}
+          alt="Weather icon"
+          className="w-28 h-28"
+        />
       </div>
 
       <div className="absolute bottom-2 right-2 text-right text-darkText dark:text-lightText">
