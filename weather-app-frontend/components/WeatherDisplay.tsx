@@ -8,7 +8,6 @@ import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { favoritesThunk } from "../thunks/favoritesThunk";
 import { FavoriteCity } from "../types/mainTypes";
 import { useSession } from "next-auth/react";
-import { fetchWeather } from "../thunks/fetchWeather"; // Assuming you have this
 
 const kelvinToCelsius = (kelvin: number) => (kelvin - 273.15).toFixed(1);
 const celsiusToFahrenheit = (celsius: string) =>
@@ -20,7 +19,7 @@ const WeatherDisplay = () => {
   const token = session?.accessToken;
   const userId = session?.user?.id;
 
-  console.log("USER ID:", userId);
+  console.log("USER İD:", userId);
 
   const [isCelsius, setIsCelsius] = useState(true);
 
@@ -41,20 +40,6 @@ const WeatherDisplay = () => {
   );
 
   useEffect(() => {
-    if (!weatherData) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          dispatch(fetchWeather(latitude, longitude));
-        },
-        (error) => {
-          console.error("Error fetching location:", error);
-        }
-      );
-    }
-  }, [dispatch, weatherData]);
-
-  useEffect(() => {
     if (token && userId) {
       dispatch(favoritesThunk("fetch", token, { userId }));
     }
@@ -70,9 +55,7 @@ const WeatherDisplay = () => {
   }
   if (!weatherData) {
     return (
-      <p className="text-darkText dark:text-lightText">
-        Fetching your location...
-      </p>
+      <p className="text-darkText dark:text-lightText">Location not selected</p>
     );
   }
 
