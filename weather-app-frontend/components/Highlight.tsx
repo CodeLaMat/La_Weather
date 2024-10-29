@@ -21,14 +21,18 @@ const Highlights = () => {
   const windDirection = currentWeather.wind.deg;
   const humidity = currentWeather.main.humidity;
   const visibility = currentWeather.visibility / 1000;
-  const sunrise = new Date(weatherData.city.sunrise * 1000).toLocaleTimeString(
-    [],
-    { hour: "2-digit", minute: "2-digit" }
-  );
-  const sunset = new Date(weatherData.city.sunset * 1000).toLocaleTimeString(
-    [],
-    { hour: "2-digit", minute: "2-digit" }
-  );
+  const sunrise = weatherData.city.sunrise
+    ? new Date(weatherData.city.sunrise * 1000).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "N/A";
+  const sunset = weatherData.city.sunset
+    ? new Date(weatherData.city.sunset * 1000).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "N/A";
 
   return (
     <div className="">
