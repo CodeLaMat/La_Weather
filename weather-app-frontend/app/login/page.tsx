@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { AiFillGoogleCircle } from "react-icons/ai";
 import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 

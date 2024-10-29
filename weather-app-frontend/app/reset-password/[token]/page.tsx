@@ -35,8 +35,11 @@ export default function ResetPassword() {
       } else {
         throw new Error(resultAction.payload as string);
       }
-    } catch (error: any) {
-      toast.error(`Error: ${error.message}`);
+    } catch (error) {
+      let message;
+      if (error instanceof Error) message = error.message;
+      else message = String(error);
+      toast.error(message);
     }
   };
 
