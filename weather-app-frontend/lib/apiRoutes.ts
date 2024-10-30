@@ -1,5 +1,4 @@
-const protocol =
-  process.env.NEXT_PUBLIC_NODE_ENV === "production" ? "https" : "http";
+const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 const backendIpAddress = process.env.NEXT_PUBLIC_BACKEND_IP_ADDRESS;
 const backendPort = process.env.NEXT_PUBLIC_BACKEND_PORT;
 
