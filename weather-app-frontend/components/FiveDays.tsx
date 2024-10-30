@@ -43,32 +43,41 @@ const Forecast = () => {
         5 Day Forecast
       </h2>
       <div className="grid grid-cols-5 gap-4">
-        {forecastData.map((day, index) => {
-          const temperatureCelsius = kelvinToCelsius(day.main.temp);
-          const iconCode = day.weather[0].icon;
-          const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-          const weekday = getWeekdayName(day.dt);
+        {forecastData.map(
+          (
+            day: {
+              main: { temp: number };
+              weather: { icon: string }[];
+              dt: number;
+            },
+            index: number
+          ) => {
+            const temperatureCelsius = kelvinToCelsius(day.main.temp);
+            const iconCode = day.weather[0].icon;
+            const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+            const weekday = getWeekdayName(day.dt);
 
-          return (
-            <div
-              key={index}
-              className="p-4 dark:bg-darkBody bg-white   rounded-xl flex flex-col items-center justify-center text-center"
-            >
-              <p className=" text-darkText dark:text-lightText  text-sm">
-                {weekday}
-                <span className="block h-0.5 w-10 mx-auto mt-1 bg-gradient-to-r from-transparent via-gray-500 to-transparent"></span>
-              </p>
-              <img
-                src={iconUrl}
-                alt="Weather icon"
-                className="w-12 h-12 my-2"
-              />
-              <p className="text-xl text-darkText dark:text-lightText  font-semibold">
-                {temperatureCelsius}°C
-              </p>
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={index}
+                className="p-4 dark:bg-darkBody bg-white   rounded-xl flex flex-col items-center justify-center text-center"
+              >
+                <p className=" text-darkText dark:text-lightText  text-sm">
+                  {weekday}
+                  <span className="block h-0.5 w-10 mx-auto mt-1 bg-gradient-to-r from-transparent via-gray-500 to-transparent"></span>
+                </p>
+                <img
+                  src={iconUrl}
+                  alt="Weather icon"
+                  className="w-12 h-12 my-2"
+                />
+                <p className="text-xl text-darkText dark:text-lightText  font-semibold">
+                  {temperatureCelsius}°C
+                </p>
+              </div>
+            );
+          }
+        )}
       </div>
     </div>
   );
