@@ -38,4 +38,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+#zip files
+*.zip
+
+
+# storybook
 *storybook.log
