@@ -29,7 +29,7 @@ jobs:
           npm install
           npm run build
           echo "Frontend build completed. Files in the directory:"
-          ls -R .next
+          ls -R
 
       - name: Deploy to Azure Web App (Frontend)
         uses: azure/webapps-deploy@v2
@@ -37,7 +37,7 @@ jobs:
           app-name: laweatherapp
           slot-name: production
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_FRONTEND }}
-          package: weather-app-frontend/.next
+          package: weather-app-frontend # Deploy the entire frontend folder
 
   deploy-backend:
     name: Deploy Backend to Azure
@@ -69,4 +69,4 @@ jobs:
           app-name: laweatherapp-backend
           slot-name: production
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_BACKEND }}
-          package: weather-app-backend
+          package: weather-app-backend # Deploy the entire backend folder
