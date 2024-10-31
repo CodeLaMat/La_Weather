@@ -1,0 +1,76 @@
+name: Deploy Weather App to Azure
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-frontend:
+    name: Deploy Frontend to Azure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: weather-app-frontend
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Install dependencies and build frontend
+        run: |
+          cd weather-app-frontend
+          echo "Current directory: $(pwd)"
+          echo "Node version:"
+          node -v
+          echo "NPM version:"
+          npm -v
+          npm install
+          npm run build
+          echo "Frontend build completed. Files in the directory:"
+          ls -R .next
+
+      - name: Deploy to Azure Web App (Frontend)
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: laweatherapp # Frontend Web App name in Azure
+          slot-name: production
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_FRONTEND }}
+          package: ./weather-app-frontend/.next # Path to the frontend build output
+
+  deploy-backend:
+    name: Deploy Backend to Azure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: weather-app-backend
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Install dependencies and start backend
+        run: |
+          cd weather-app-backend
+          echo "Current directory: $(pwd)"
+          echo "Node version:"
+          node -v
+          echo "NPM version:"
+          npm -v
+          npm install
+          echo "Backend dependencies installed. Files in the directory:"
+          ls -R
+
+      - name: Deploy to Azure Web App (Backend)
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: laweatherapp-backend # Backend Web App name in Azure
+          slot-name: production
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_BACKEND }}
+          package: ./weather-app-backend
