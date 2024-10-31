@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          path: weather-app-frontend
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -21,8 +19,8 @@ jobs:
           node-version: "20"
 
       - name: Install dependencies and build frontend
+        working-directory: ./La_Weather/La_Weather/weather-app-frontend
         run: |
-          cd weather-app-frontend
           echo "Current directory: $(pwd)"
           echo "Node version:"
           node -v
@@ -39,7 +37,7 @@ jobs:
           app-name: laweatherapp # Frontend Web App name in Azure
           slot-name: production
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_FRONTEND }}
-          package: ./weather-app-frontend/.next # Path to the frontend build output
+          package: ./La_Weather/La_Weather/weather-app-frontend/.next # Path to the frontend build output
 
   deploy-backend:
     name: Deploy Backend to Azure
@@ -47,8 +45,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          path: weather-app-backend
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -56,8 +52,8 @@ jobs:
           node-version: "20"
 
       - name: Install dependencies and start backend
+        working-directory: ./La_Weather/La_Weather/weather-app-backend
         run: |
-          cd weather-app-backend
           echo "Current directory: $(pwd)"
           echo "Node version:"
           node -v
@@ -73,4 +69,4 @@ jobs:
           app-name: laweatherapp-backend # Backend Web App name in Azure
           slot-name: production
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_BACKEND }}
-          package: ./weather-app-backend
+          package: ./La_Weather/La_Weather/weather-app-backend
