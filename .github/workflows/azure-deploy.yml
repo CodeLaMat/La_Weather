@@ -34,10 +34,10 @@ jobs:
       - name: Deploy to Azure Web App (Frontend)
         uses: azure/webapps-deploy@v2
         with:
-          app-name: laweatherapp # Frontend Web App name in Azure
+          app-name: laweatherapp
           slot-name: production
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_FRONTEND }}
-          package: weather-app-frontend/.next # Path to the frontend build output
+          package: weather-app-frontend/.next
 
   deploy-backend:
     name: Deploy Backend to Azure
@@ -66,7 +66,7 @@ jobs:
       - name: Deploy to Azure Web App (Backend)
         uses: azure/webapps-deploy@v2
         with:
-          app-name: laweatherapp-backend # Backend Web App name in Azure
+          app-name: laweatherapp-backend
           slot-name: production
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_BACKEND }}
           package: weather-app-backend
