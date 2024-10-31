@@ -27,18 +27,18 @@ jobs:
           echo "NPM version:"
           npm -v
           npm install
-          npm run build
+          npm run build # This will catch any build issues before deployment
           echo "Frontend build completed. Files in the directory:"
           ls -R
 
       - name: Deploy to Azure Web App (Frontend)
+        if: success() # Only deploy if the build succeeds
         uses: azure/webapps-deploy@v2
         with:
           app-name: laweatherapp
           slot-name: production
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_FRONTEND }}
-          package: weather-app-frontend # Deploy the entire frontend folder
-
+          package: weather-app-frontend
   deploy-backend:
     name: Deploy Backend to Azure
     runs-on: ubuntu-latest
