@@ -9,7 +9,6 @@ jobs:
   deploy-frontend:
     name: Deploy Frontend to Azure
     runs-on: ubuntu-latest
-    timeout-minutes: 60
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -43,7 +42,6 @@ jobs:
   deploy-backend:
     name: Deploy Backend to Azure
     runs-on: ubuntu-latest
-    timeout-minutes: 60
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
