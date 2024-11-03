@@ -124,7 +124,6 @@ const requestPasswordReset = async (req, res) => {
       });
     }
 
-    // Check if the user's OAuth provider is Google
     if (user.oauthProvider === "google") {
       return res.status(200).json({
         message:
@@ -132,7 +131,6 @@ const requestPasswordReset = async (req, res) => {
       });
     }
 
-    // Generate reset token and save to user
     const resetToken = crypto.randomBytes(32).toString("hex");
     const resetTokenHash = crypto
       .createHash("sha256")

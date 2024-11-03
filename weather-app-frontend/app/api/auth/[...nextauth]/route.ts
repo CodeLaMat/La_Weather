@@ -113,8 +113,11 @@ const handler = NextAuth({
         }
       }
 
-      if (user) {
+      if (user && !token.id) {
         token.id = user.id;
+      }
+
+      if (user) {
         token.image = user.image || "";
         token.accessToken = user.accessToken || token.accessToken;
       }

@@ -15,29 +15,44 @@ export const fetchFavoriteCitiesWeather =
     dispatch(fetchFavoriteWeatherStart());
 
     try {
-      const requests = cities.map(async (city) => {
+      const weatherDataPromises = cities.map((city) => {
         const url = `${process.env.NEXT_PUBLIC_OPENWEATHER_LINK}lat=${city.coords.lat}&lon=${city.coords.lon}&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}&units=metric`;
-
-        const response = await axios.get<WeatherData>(url);
-        console.log(`API response for city ${city.name}:`, response.data);
-
-        if (response.status === 200 && response.data) {
-          dispatch(
-            fetchFavoriteWeatherSuccess({
-              cityName: city.name,
-              data: response.data,
-            })
-          );
-        } else {
-          dispatch(
-            fetchFavoriteWeatherFailure(
-              `Failed to fetch weather data for ${city.name}`
-            )
-          );
-        }
+        return axios.get<WeatherData>(url).then((response) => ({
+          cityName: city.name,
+          data: response.data,
+          success: response.status === 200,
+        }));
       });
 
-      await Promise.all(requests);
+      const weatherDataResults = await Promise.all(weatherDataPromises);
+
+      const successfulResults = weatherDataResults.filter(
+        (result) => result.success
+      );
+      const failedResults = weatherDataResults.filter(
+        (result) => !result.success
+      );
+
+      if (successfulResults.length > 0) {
+        successfulResults.forEach((result) => {
+          dispatch(
+            fetchFavoriteWeatherSuccess({
+              cityName: result.cityName,
+              data: result.data,
+            })
+          );
+        });
+      }
+
+      if (failedResults.length > 0) {
+        failedResults.forEach((result) =>
+          dispatch(
+            fetchFavoriteWeatherFailure(
+              `Failed to fetch data for ${result.cityName}`
+            )
+          )
+        );
+      }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error);
