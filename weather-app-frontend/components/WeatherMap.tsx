@@ -5,10 +5,10 @@ import { MapContainer, TileLayer, Marker, Tooltip } from "react-leaflet";
 import { renderToString } from "react-dom/server";
 import "leaflet/dist/leaflet.css";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchFavoriteCitiesWeather } from "@/thunks/fetchFavoriteCitiesWeather";
-import { RootState, AppDispatch } from "@/store/store";
+import { fetchFavoriteCitiesWeather } from "../thunks/fetchFavoriteCitiesWeather";
+import { RootState, AppDispatch } from "../store/store";
 import L from "leaflet";
-import { FavoriteCity } from "@/types/mainTypes";
+import { FavoriteCity } from "../types/mainTypes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 

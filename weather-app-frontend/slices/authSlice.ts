@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { registerUser } from "@/thunks/auth";
+import { registerUser } from "../thunks/auth";
 
 interface AuthState {
   isRegistered: boolean;

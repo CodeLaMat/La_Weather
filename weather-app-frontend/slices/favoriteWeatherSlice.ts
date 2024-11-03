@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { WeatherData } from "@/types/mainTypes";
+import { WeatherData } from "../types/mainTypes";
 
 interface FavoriteWeatherState {
   loading: boolean;

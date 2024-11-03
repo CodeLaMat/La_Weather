@@ -6,8 +6,8 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "@/components/ui/navigation-menu";
-import { Input } from "@/components/ui/input";
+} from "./ui/navigation-menu";
+import { Input } from "./ui/input";
 import { Moon, Search, Sun, LogOut, LogIn, UserCircle } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { fetchWeather } from "../thunks/fetchWeather";
@@ -23,13 +23,13 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useSession } from "next-auth/react";
-import { favoritesThunk } from "@/thunks/favoritesThunk";
+import { favoritesThunk } from "../thunks/favoritesThunk";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "./ui/tooltip";
 
 interface NavigationProps {
   toggleTheme: () => void;

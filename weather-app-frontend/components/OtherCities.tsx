@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { RootState } from "../store/store";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { useSelector } from "react-redux";
-import { getIconUrl } from "@/lib/utils";
+import { getIconUrl } from "../lib/utils";
 
 const OtherCities = () => {
   const [showAll, setShowAll] = useState(false);

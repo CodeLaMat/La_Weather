@@ -2,12 +2,12 @@
 
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { resetPassword } from "@/thunks/auth";
+import { Input } from "../../../components/ui/input";
+import { Button } from "../../../components/ui/button";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { resetPassword } from "../../../thunks/auth";
 import { toast } from "sonner";
-import Loading from "@/components/Loading";
+import Loading from "../../../components/Loading";
 
 export default function ResetPassword() {
   const { token } = useParams() as { token: string };

@@ -3,7 +3,7 @@ import { JWT } from "next-auth/jwt";
 import { User, Session, Account } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { backendApiRoutes } from "@/lib/apiRoutes";
+import { backendApiRoutes } from "../../../../lib/apiRoutes";
 import { OAuth2Client } from "google-auth-library";
 
 const clientId = process.env.GOOGLE_CLIENT_ID || "";

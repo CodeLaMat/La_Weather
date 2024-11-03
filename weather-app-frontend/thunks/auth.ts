@@ -1,6 +1,6 @@
-import { backendApiRoutes } from "@/lib/apiRoutes";
+import { backendApiRoutes } from "../lib/apiRoutes";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { startLoading, stopLoading } from "@/slices/loadingSlice";
+import { startLoading, stopLoading } from "../slices/loadingSlice";
 
 export const registerUser = createAsyncThunk(
   "auth/register",

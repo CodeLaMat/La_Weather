@@ -1,6 +1,6 @@
-import { WeatherData } from "@/types/mainTypes";
+import { WeatherData } from "../types/mainTypes";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { logoutUser } from "@/thunks/auth";
+import { logoutUser } from "../thunks/auth";
 
 interface WeatherState {
   loading: boolean;

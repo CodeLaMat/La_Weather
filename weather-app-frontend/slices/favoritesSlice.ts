@@ -1,4 +1,4 @@
-import { FavoriteCity } from "@/types/mainTypes";
+import { FavoriteCity } from "../types/mainTypes";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface FavoritesState {

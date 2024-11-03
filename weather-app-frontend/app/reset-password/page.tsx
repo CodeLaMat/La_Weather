@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { requestPasswordReset } from "@/thunks/auth";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { requestPasswordReset } from "../../thunks/auth";
 import { toast } from "sonner";
-import Loading from "@/components/Loading";
+import Loading from "../../components/Loading";
 
 export default function RequestPasswordReset() {
   const [email, setEmail] = useState("");

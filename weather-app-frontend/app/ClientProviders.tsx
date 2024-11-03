@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import { SessionProvider } from "next-auth/react";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
-import Navigation from "@/components/Navigation";
-import GlobalLoading from "@/components/GlobalLoading";
+import Navigation from "../components/Navigation";
+import GlobalLoading from "../components/GlobalLoading";
 
 export default function ClientProviders({
   children,

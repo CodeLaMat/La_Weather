@@ -6,7 +6,7 @@ import WeatherDisplay from "../components/WeatherDisplay";
 import Highlight from "../components/Highlight";
 import OtherCities from "../components/OtherCities";
 import Sidebar from "../components/Sidebar";
-import FiveDays from "@/components/FiveDays";
+import FiveDays from "../components/FiveDays";
 
 const WeatherMapWithNoSSR = dynamic(() => import("../components/WeatherMap"), {
   ssr: false,

@@ -1,4 +1,4 @@
-import { LoadingState } from "@/types/mainTypes";
+import { LoadingState } from "../types/mainTypes";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: LoadingState = {

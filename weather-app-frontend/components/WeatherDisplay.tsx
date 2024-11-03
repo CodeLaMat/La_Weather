@@ -9,7 +9,7 @@ import { favoritesThunk } from "../thunks/favoritesThunk";
 import { FavoriteCity } from "../types/mainTypes";
 import { useSession } from "next-auth/react";
 import { fetchWeather } from "../thunks/fetchWeather";
-import { getIconUrl } from "@/lib/utils";
+import { getIconUrl } from "../lib/utils";
 
 const kelvinToCelsius = (kelvin: number) => (kelvin - 273.15).toFixed(1);
 const celsiusToFahrenheit = (celsius: string) =>

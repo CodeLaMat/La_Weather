@@ -1,18 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "../../components/ui/input";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { startLoading, stopLoading } from "@/slices/loadingSlice";
-import Loading from "@/components/Loading";
-import { Button } from "@/components/ui/button";
+} from "../../components/ui/card";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { startLoading, stopLoading } from "../../slices/loadingSlice";
+import Loading from "../../components/Loading";
+import { Button } from "../../components/ui/button";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";

@@ -3,7 +3,7 @@ import weatherReducer from "../slices/weatherSlice";
 import loadingReducer from "../slices/loadingSlice";
 import favoriteWeatherReducer from "../slices/favoriteWeatherSlice";
 import favoritesReducer from "../slices/favoritesSlice";
-import authReducer from "@/slices/authSlice";
+import authReducer from "../slices/authSlice";
 
 import { ThunkAction, Action } from "@reduxjs/toolkit";
 

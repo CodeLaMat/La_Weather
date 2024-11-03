@@ -12,7 +12,7 @@ import {
   removeFavoriteFailure,
 } from "../slices/favoritesSlice";
 import { FavoriteCity } from "../types/mainTypes";
-import { backendApiRoutes } from "@/lib/apiRoutes";
+import { backendApiRoutes } from "../lib/apiRoutes";
 
 type FavoritesAction = "fetch" | "add" | "remove";
 type AddPayload = { userId: string; city: FavoriteCity };

@@ -2,13 +2,13 @@
 
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { registerUser } from "@/thunks/auth";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { registerUser } from "../../thunks/auth";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { startLoading, stopLoading } from "@/slices/loadingSlice";
+import { startLoading, stopLoading } from "../../slices/loadingSlice";
 import { FcGoogle } from "react-icons/fc";
 import { Eye, EyeOff } from "lucide-react";
 

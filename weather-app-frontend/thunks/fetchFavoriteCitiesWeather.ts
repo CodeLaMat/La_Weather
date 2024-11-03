@@ -5,7 +5,7 @@ import {
   fetchFavoriteWeatherSuccess,
   fetchFavoriteWeatherFailure,
 } from "../slices/favoriteWeatherSlice";
-import { WeatherData } from "@/types/mainTypes";
+import { WeatherData } from "../types/mainTypes";
 
 export const fetchFavoriteCitiesWeather =
   (
