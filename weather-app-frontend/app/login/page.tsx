@@ -23,6 +23,7 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const isLoading = useAppSelector((state) => state.loading.isLoggingIn);
   const dispatch = useAppDispatch();
 
@@ -30,6 +31,7 @@ export default function LoginForm() {
 
   const handleLogin = async (email: string, password: string) => {
     dispatch(startLoading("isLoggingIn"));
+    setErrorMessage("");
 
     const result = await signIn("credentials", {
       email,
@@ -37,10 +39,12 @@ export default function LoginForm() {
       redirect: false,
     });
 
+    dispatch(stopLoading("isLoggingIn"));
+
     if (result?.error) {
+      setErrorMessage("Invalid Credentials!");
       toast.error("Invalid Credentials!");
     } else {
-      dispatch(stopLoading("isLoggingIn"));
       router.replace("/");
     }
   };
@@ -68,6 +72,9 @@ export default function LoginForm() {
           </CardTitle>
         </CardHeader>
         <CardContent className="w-full">
+          {errorMessage && (
+            <p className="text-red-500 text-center mb-4">{errorMessage}</p>
+          )}
           <form onSubmit={handleSubmit}>
             <div className="mb-4 text-darkText dark:text-lightText">
               <label

@@ -119,16 +119,28 @@ const requestPasswordReset = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(200).json({
-        message: "A user with this email does not exist.",
+        message:
+          "If an account with that email exists, a reset link has been sent.",
       });
     }
+
+    // Check if the user's OAuth provider is Google
+    if (user.oauthProvider === "google") {
+      return res.status(200).json({
+        message:
+          "Your account is linked with Google. Please reset your password through your Google account settings.",
+      });
+    }
+
+    // Generate reset token and save to user
     const resetToken = crypto.randomBytes(32).toString("hex");
     const resetTokenHash = crypto
       .createHash("sha256")
       .update(resetToken)
       .digest("hex");
+
     user.resetPasswordToken = resetTokenHash;
-    user.resetPasswordExpires = Date.now() + 3600000;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiration
     await user.save();
 
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;

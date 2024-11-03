@@ -10,6 +10,7 @@ import Loading from "@/components/Loading";
 
 export default function RequestPasswordReset() {
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector(
     (state) => state.loading.isRequestingPasswordReset
@@ -17,22 +18,30 @@ export default function RequestPasswordReset() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setMessage("");
 
     try {
       const resultAction = await dispatch(requestPasswordReset({ email }));
       if (requestPasswordReset.fulfilled.match(resultAction)) {
-        toast.success(
-          "If an account with that email exists, a reset link has been sent."
-        );
+        const successMessage =
+          resultAction.payload?.message ||
+          "If an account with that email exists, a reset link has been sent.";
+        toast.success(successMessage);
+        setMessage(successMessage);
         setEmail("");
       } else {
-        throw new Error(resultAction.payload as string);
+        const errorMessage =
+          typeof resultAction.payload === "string"
+            ? resultAction.payload
+            : "Request failed.";
+        toast.error(String(errorMessage));
+        setMessage(errorMessage);
       }
     } catch (error) {
-      let message;
-      if (error instanceof Error) message = error.message;
-      else message = String(error);
-      toast.error(message);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      toast.error(errorMessage);
+      setMessage(errorMessage);
     }
   };
 
@@ -42,7 +51,7 @@ export default function RequestPasswordReset() {
     <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-black">
       <form
         onSubmit={handleSubmit}
-        className="bg-darkBackground dark:bg-lightBackground  p-6 rounded-lg shadow-md w-full max-w-md"
+        className="bg-darkBackground dark:bg-lightBackground p-6 rounded-lg shadow-md w-full max-w-md"
       >
         <h2 className="text-2xl font-semibold text-center mb-4 text-darkText dark:text-lightText">
           Reset Your Password
@@ -70,6 +79,11 @@ export default function RequestPasswordReset() {
         >
           Send Reset Link
         </Button>
+        {message && (
+          <p className="text-center mt-4 text-sm text-red-600 dark:text-red-300">
+            {message}
+          </p>
+        )}
       </form>
     </div>
   );

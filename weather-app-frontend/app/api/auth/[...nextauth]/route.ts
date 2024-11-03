@@ -7,12 +7,13 @@ import { backendApiRoutes } from "@/lib/apiRoutes";
 import { OAuth2Client } from "google-auth-library";
 
 const clientId = process.env.GOOGLE_CLIENT_ID || "";
+const clientSecret = process.env.GOOGLE_CLIENT_SECRET || "";
 
 const handler = NextAuth({
   providers: [
     GoogleProvider({
       clientId,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientSecret,
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -20,11 +21,12 @@ const handler = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials): Promise<User | null> {
+      async authorize(credentials) {
         if (!credentials) {
           console.error("Missing credentials");
           return null;
         }
+
         try {
           const res = await fetch(`${backendApiRoutes.LOGIN}`, {
             method: "POST",
@@ -36,26 +38,26 @@ const handler = NextAuth({
           });
 
           if (!res.ok) {
-            const errorResponse = await res.json();
-            throw new Error(errorResponse.message || "Login failed");
+            // Return null for invalid credentials instead of throwing an error
+            console.error("Invalid login attempt:", await res.json());
+            return null;
           }
 
           const data = await res.json();
           if (data && data.userId && data.email) {
-            const user: User = {
+            return {
               id: data.userId,
               email: data.email,
               name: data.name,
               image: data.image,
               accessToken: data.token,
             };
-            return user;
           } else {
             return null;
           }
         } catch (error) {
           console.error("Login error:", error);
-          throw new Error("Login error");
+          return null;
         }
       },
     }),
@@ -73,11 +75,10 @@ const handler = NextAuth({
       user,
     }: {
       token: JWT;
-      account?: Account | null;
-      user?: User;
+      account: Account | null;
+      user: User | undefined;
     }) {
-      // Handle Google sign-in
-      if (account?.provider === "google" && account?.access_token) {
+      if (account?.provider === "google" && account.access_token) {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
         token.expiresAt = (account.expires_at || 0) * 1000;
@@ -100,37 +101,34 @@ const handler = NextAuth({
           );
 
           if (!response.ok) {
-            console.error(
-              "Failed to create user in backend during Google sign-in"
-            );
-            throw new Error(
-              "Failed to create user in backend during Google sign-in"
-            );
+            console.error("Failed to create Google user in backend.");
+            throw new Error("Backend error creating Google user.");
           }
 
           const result = await response.json();
           token.id = result.userId;
           token.image = user?.image || "";
         } catch (error) {
-          console.error("Error during Google sign-in:", error);
-          throw error;
+          console.error("Google sign-in error:", error);
         }
       }
 
-      // Handle regular credentials login
       if (user) {
         token.id = user.id;
         token.image = user.image || "";
         token.accessToken = user.accessToken || token.accessToken;
       }
 
-      // Refresh token if expired
-      if (Date.now() > (token.expiresAt as number)) {
-        const refreshedToken = await refreshGoogleToken(
-          token.refreshToken as string
-        );
-        token.accessToken = refreshedToken.accessToken;
-        token.expiresAt = refreshedToken.expiresAt;
+      if (typeof token.expiresAt === "number" && Date.now() > token.expiresAt) {
+        try {
+          const refreshedToken = await refreshGoogleToken(
+            token.refreshToken as string
+          );
+          token.accessToken = refreshedToken.accessToken;
+          token.expiresAt = refreshedToken.expiresAt;
+        } catch (error) {
+          console.error("Failed to refresh token:", error);
+        }
       }
 
       return token;
@@ -149,17 +147,15 @@ const handler = NextAuth({
 
 async function refreshGoogleToken(refreshToken: string) {
   try {
-    const client = new OAuth2Client(clientId);
-    const response = await client.getToken(refreshToken);
-
-    const newToken = response.tokens;
+    const client = new OAuth2Client(clientId, clientSecret);
+    const { tokens } = await client.getToken(refreshToken);
     return {
-      accessToken: newToken.access_token,
-      expiresAt: newToken.expiry_date || 0,
+      accessToken: tokens.access_token,
+      expiresAt: tokens.expiry_date || Date.now() + 3600 * 1000,
     };
   } catch (error) {
     console.error("Failed to refresh Google access token:", error);
-    throw new Error("Failed to refresh Google access token");
+    throw error;
   }
 }
 
