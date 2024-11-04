@@ -1,10 +1,10 @@
 # LaWeather App
 
-![Weather App Banner](./assets/banner.gif)
+![Weather App Banner](https://unelmacloud.com/drive/s/r7HdpbxLzLG1cBPRiisdGErM36qX8X)
 
 Welcome to the **LaWeather App**, a full-stack application that provides real-time weather information based on your location. Whether you're planning your day, traveling, or just curious about the weather, our app delivers accurate and timely weather data right at your fingertips.
 
-![App Preview](./assets/app-preview.gif)
+![App Preview](https://unelmacloud.com/drive/s/3kXkUPKYKZ4HuoD3fmOIXyVSjiiP3i)
 
 ## Table of Contents
 
@@ -75,7 +75,7 @@ Welcome to the **LaWeather App**, a full-stack application that provides real-ti
 
 Experience the app in action with our interactive demo:
 
-[![Watch the Demo](./assets/demo-thumbnail.gif)](https://your-demo-link.com)
+[![Watch the Demo](https://unelmacloud.com/drive/s/LwTEFls9zpPmZ6UylaDIbNgxf1aWWM)](https://unelmacloud.com/drive/s/yuwCsqsF5Yi3kdRiESNwRXYn6lpBSF)
 
 _Click the image above to watch the demo._
 
