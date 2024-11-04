@@ -274,7 +274,7 @@ The server should be running at `http://localhost:5000`.
 
    - Click the **Logout** button to securely end your session. This action clears your weather data from the app.
 
-   ![Logout Action](./assets/logout.gif)
+   ![Logout Action](./weather-app-frontend/assets/logout.gif)
 
 ## API Documentation
 
