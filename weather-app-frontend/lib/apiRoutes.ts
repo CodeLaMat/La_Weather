@@ -4,7 +4,7 @@ const backendPort = process.env.NEXT_PUBLIC_BACKEND_PORT;
 
 const BACKEND_URL =
   process.env.NODE_ENV === "production"
-    ? `${protocol}://${process.env.NEXT_PUBLIC_BACKEND_DEPLOYMENT_URL}`
+    ? `${process.env.NEXT_PUBLIC_BACKEND_DEPLOYMENT_URL}`
     : `${protocol}://${backendIpAddress}:${backendPort}`;
 
 export const backendApiRoutes = {
