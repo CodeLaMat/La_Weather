@@ -421,7 +421,7 @@ Contributions are what make the open-source community such an amazing place to l
 
 ## License
 
-Distributed under the **MIT License**. See `LICENSE` for more information.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
 
